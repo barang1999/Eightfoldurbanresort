@@ -6,8 +6,7 @@ import { AuthProvider } from './contexts/AuthContext';
 
 // Fix 100vh issue on mobile browsers
 const setAppHeight = () => {
-  const vh = window.innerHeight * 0.01;
-  document.documentElement.style.setProperty('--app-height', `${vh * 100}px`);
+  document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
 };
 setAppHeight();
 window.addEventListener('resize', setAppHeight);
