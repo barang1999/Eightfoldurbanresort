@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { auth } from '../firebase';
-import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from 'firebase/auth';
 
 export default function LoginPage() {
   const { signInWithEmail, signInWithFacebook } = useAuth();
@@ -14,6 +14,21 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
+
+  useEffect(() => {
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result?.user) {
+          console.log("[GoogleLogin] Redirect login successful:", result);
+          result.user.getIdToken().then((token) => {
+            window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("[GoogleLogin] Redirect login failed:", err);
+      });
+  }, []);
 
   const handleLogin = async () => {
     setError('');
