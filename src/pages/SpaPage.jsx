@@ -38,7 +38,7 @@ export default function SpaPage() {
   useEffect(() => {
     async function fetchSpaMenu() {
       try {
-        const res = await fetch(`http://localhost:7071/api/spa?propertyId=${propertyId}`);
+        const res = await fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/spa?propertyId=${propertyId}`);
         const data = await res.json();
         setSpaMenu(data.sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0)));
       } catch (err) {
