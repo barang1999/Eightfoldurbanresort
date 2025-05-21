@@ -173,7 +173,7 @@ useEffect(() => {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -80, opacity: 0 }}
                   transition={{ duration: 0.3 }}
-                  className={`md:hidden px-4 pb-4 fixed top-0 left-0 right-0 z-30 bg-white`}
+                  className={`md:hidden px-4 pb-4 fixed  border-b border-[#A58E63] top-0 left-0 right-0 z-30 bg-white`}
                 >
                   <div id="sticky-tab-wrapper" className="sticky top-16 z-30 bg-white">
                     <button
