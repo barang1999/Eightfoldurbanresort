@@ -57,8 +57,7 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
         console.log("[GoogleLogin] Token received:", token);
         window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
       } catch (popupError) {
-        console.warn("[GoogleLogin] Popup failed, falling back to redirect...", popupError);
-        await signInWithRedirect(auth, provider);
+        console.error("[GoogleLogin] Popup failed:", popupError);
       }
     } catch (error) {
       console.error("[GoogleLogin] Login failed:", error);
