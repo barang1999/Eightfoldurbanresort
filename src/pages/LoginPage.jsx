@@ -29,6 +29,17 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const token = await result.user.getIdToken();
+      window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -87,16 +98,7 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
             </div>
 
             <button
-              onClick={async () => {
-                try {
-                  const provider = new GoogleAuthProvider();
-                  const result = await signInWithPopup(auth, provider);
-                  const token = await result.user.getIdToken();
-                  window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
-                } catch (err) {
-                  console.error('Google login failed:', err);
-                }
-              }}
+              onClick={handleGoogleLogin}
               className="w-full border border-gray-300 text-gray-800 py-3 rounded-[3rem] hover:bg-gray-100 transition flex items-center justify-center gap-4"
             >
               <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google" className="h-5 w-5 bg-white rounded-full" />
