@@ -1,3 +1,4 @@
 .env.local
 .env.production
 firebase-auth-server/serviceAccountKey.json
+firebase-auth-server
