@@ -40,7 +40,7 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
         console.log("[GoogleLogin] Sign-in result:", result);
         const idToken = await result.user.getIdToken();
 
-        const res = await fetch("http://localhost:7070/api/generate-custom-token", {
+        const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idToken }),
