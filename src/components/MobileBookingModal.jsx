@@ -153,7 +153,7 @@ export default function MobileBookingModal({
                         adults: adults.toString(),
                         children: children.toString()
                       });
-                      window.location.href = `${import.meta.env.VITE_CUSTOMER_API_URL}/?${params.toString()}`;
+                      window.location.href = `${import.meta.env.VITE_BOOKING_URL}/?${params.toString()}`;
                     } catch (err) {
                       console.error("❌ Failed to submit search:", err);
                     }
