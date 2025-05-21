@@ -5,7 +5,7 @@ import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyDW2h-a8syPwyLbrZ_Lwk3eVidgd4n00mw",
-    authDomain: "eightfoldurbanresort.vercel.app",
+    authDomain: "eightfold-booking-45344.firebaseapp.com", // ✅ your Firebase Hosting domain
     projectId: "eightfold-booking-45344",
     storageBucket: "eightfold-booking-45344.appspot.com",
     messagingSenderId: "45728779169",
