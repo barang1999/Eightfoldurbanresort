@@ -241,7 +241,7 @@ export default function Home() {
               {
                 title: "Spa",
                 description: "Our spa suites offer a tranquil escape after a day at Angkor. Rejuvenate with traditional Khmer massages, soothing aromatherapy, and revitalizing herbal compress treatments — all thoughtfully crafted to restore balance and wellbeing.",
-                image: "/public/spa5.jpg",
+                image: "/spa5.jpg",
                 buttonText: "Discover More"
               },
               {
