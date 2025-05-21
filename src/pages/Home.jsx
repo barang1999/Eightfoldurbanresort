@@ -280,7 +280,7 @@ export default function Home() {
               </div>
               <div className="w-full flex justify-center md:justify-end order-1 md:order-2">
                 <img
-                  src="/public/hotel1.jpg"
+                  src="/hotel1.jpg"
                   alt="Sustainability at Eightfold Urban Resort"
                   className="w-full h-auto rounded-md shadow-md transition-opacity duration-700"
                 />
