@@ -1,7 +1,7 @@
 export default function HeroBanner({ backgroundImage, title, subtitle, children }) {
   return (
     <section
-      className="relative h-screen bg-cover bg-center flex items-center justify-center text-center"
+      className="relative min-h-[var(--app-height)] bg-cover bg-center flex items-center justify-center text-center"
       style={{ backgroundImage: `url('${backgroundImage}')` }}
     >
       <div className="absolute inset-0 bg-black/20 z-0" />
