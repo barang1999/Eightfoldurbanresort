@@ -92,7 +92,7 @@ useEffect(() => {
     const nextIndex = (lightboxIndex + direction + imagesToRender.length) % imagesToRender.length;
     const nextImage = imagesToRender[nextIndex];
     setLightboxIndex(nextIndex);
-    setLightboxImage(`/public${nextImage.src}`);
+    setLightboxImage(`/${nextImage.src}`);
   };
 
   useEffect(() => {
@@ -121,7 +121,7 @@ useEffect(() => {
       <Header />
 
       <HeroBanner
-        backgroundImage="/public/hotel3.jpg"
+        backgroundImage="/hotel3.jpg"
         title="Gallery"
         subtitle="Explore the beauty of Eightfold Urban Resort"
       />
@@ -234,10 +234,10 @@ useEffect(() => {
             {imagesToRender.map(({ src, alt, key }, index) => (
                 <div key={key} onClick={() => {
                   setLightboxIndex(imagesToRender.findIndex(image => image.key === key));
-                  setLightboxImage(`/public${src}`);
+                  setLightboxImage(`/${src}`);
                 }} className="cursor-pointer">
                   <img
-                    src={`/public${src}`}
+                    src={`/${src}`}
                     alt={alt}
                     className="w-full h-64 object-cover rounded shadow-sm transition-transform duration-300 transform hover:scale-105 hover:brightness-110"
                     loading="lazy"
