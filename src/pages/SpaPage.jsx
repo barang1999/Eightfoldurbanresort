@@ -59,7 +59,7 @@ export default function SpaPage() {
       <Header />
 
       <HeroBanner
-        backgroundImage="/public/spa1.jpg"
+        backgroundImage="/spa1.jpg"
         title="Spa & Wellness"
         subtitle="Rejuvenate your body and mind in our serene sanctuary"
       />
@@ -152,14 +152,14 @@ export default function SpaPage() {
             </button>
           </div>
           <div>
-            <img src="/public/spa5.jpg" alt="Spa Massage" className="rounded shadow-md w-full" />
+            <img src="/spa5.jpg" alt="Spa Massage" className="rounded shadow-md w-full" />
           </div>
         </div>
       </section>
 
       <section className="relative w-full max-h-[500px] overflow-hidden">
   <div className="w-full h-[500px] relative">
-    {['/public/spa3.jpg', '/public/spa1.jpg', '/public/spa4.jpg'].map((src, index) => (
+    {['/spa3.jpg', '/spa1.jpg', '/spa4.jpg'].map((src, index) => (
       <img
         key={index}
         src={src}
