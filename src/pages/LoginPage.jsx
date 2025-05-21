@@ -15,21 +15,6 @@ export default function LoginPage() {
   const location = useLocation();
 
 
-  useEffect(() => {
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result?.user) {
-          console.log("[GoogleLogin] Redirect login successful:", result);
-          result.user.getIdToken().then((token) => {
-            window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
-          });
-        }
-      })
-      .catch((err) => {
-        console.error("[GoogleLogin] Redirect login failed:", err);
-      });
-  }, []);
-
   const handleLogin = async () => {
     setError('');
     setLoading(true);
