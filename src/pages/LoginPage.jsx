@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { auth } from '../firebase';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 
 export default function LoginPage() {
   const { signInWithEmail, signInWithFacebook } = useAuth();
@@ -34,14 +34,17 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
       console.log("[GoogleLogin] Starting login process...");
       const provider = new GoogleAuthProvider();
       console.log("[GoogleLogin] Created provider:", provider);
-      
-      const result = await signInWithPopup(auth, provider);
-      console.log("[GoogleLogin] Sign-in result:", result);
 
-      const token = await result.user.getIdToken();
-      console.log("[GoogleLogin] Token received:", token);
-
-      window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+      try {
+        const result = await signInWithPopup(auth, provider);
+        console.log("[GoogleLogin] Sign-in result:", result);
+        const token = await result.user.getIdToken();
+        console.log("[GoogleLogin] Token received:", token);
+        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+      } catch (popupError) {
+        console.warn("[GoogleLogin] Popup failed, falling back to redirect...", popupError);
+        await signInWithRedirect(auth, provider);
+      }
     } catch (error) {
       console.error("[GoogleLogin] Login failed:", error);
     }
