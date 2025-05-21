@@ -153,7 +153,7 @@ export default function MobileBookingModal({
                         adults: adults.toString(),
                         children: children.toString()
                       });
-                      window.location.href = `http://localhost:5173/?${params.toString()}`;
+                      window.location.href = `${import.meta.env.VITE_CUSTOMER_API_URL}/?${params.toString()}`;
                     } catch (err) {
                       console.error("❌ Failed to submit search:", err);
                     }
@@ -172,7 +172,7 @@ export default function MobileBookingModal({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-50 bg-white w-screen h-screen overflow-y-auto flex flex-col"
+            className="fixed inset-0 z-50 bg-white w-screen min-h-[var(--app-height)] overflow-y-auto flex flex-col"
           >
             <div className="flex justify-between items-center p-4 border-b">
               <h2 className="text-lg font-medium">When do you arrive?</h2>
