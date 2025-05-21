@@ -38,9 +38,17 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
       try {
         const result = await signInWithPopup(auth, provider);
         console.log("[GoogleLogin] Sign-in result:", result);
-        const token = await result.user.getIdToken();
-        console.log("[GoogleLogin] Token received:", token);
-        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+        const idToken = await result.user.getIdToken();
+
+        const res = await fetch("http://localhost:7070/api/generate-custom-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
+
+        const { customToken } = await res.json();
+        console.log("[GoogleLogin] Custom token received:", customToken);
+        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${customToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
       } catch (popupError) {
         console.error("[GoogleLogin] Popup failed:", popupError);
       }
