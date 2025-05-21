@@ -28,7 +28,7 @@ export default function AboutUsPage() {
       <Header />
 
       <HeroBanner
-        backgroundImage="/public/hotel1.jpg"
+        backgroundImage="/hotel1.jpg"
         title="About Us"
         subtitle="Discover the story behind Eightfold Urban Resort"
       />
