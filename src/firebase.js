@@ -16,3 +16,5 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app); // 👈 This is what you're missing
+
+export { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
