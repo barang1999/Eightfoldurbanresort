@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { auth } from '../firebase';
 
 export default function LoginPage() {
   const { signInWithEmail, signInWithGoogle, signInWithFacebook } = useAuth();
@@ -18,22 +19,8 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await signInWithEmail(email, password);
-      const fallbackPath = '/';
-      const redirectTo = localStorage.getItem('lastVisitedPath');
-      const validRedirect =
-        redirectTo &&
-        redirectTo !== '/login' &&
-        redirectTo !== '/register' &&
-        redirectTo !== window.location.pathname;
-
-      if (validRedirect) {
-        console.log('Redirecting to last valid path:', redirectTo);
-        navigate(redirectTo, { replace: true });
-      } else {
-        console.log('No valid redirect path. Redirecting to fallback:', fallbackPath);
-        navigate(fallbackPath, { replace: true });
-      }
-      return;
+      const token = await auth.currentUser.getIdToken();
+window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
     } catch (err) {
       setError(err.message);
     } finally {
@@ -101,30 +88,9 @@ export default function LoginPage() {
             <button
               onClick={async () => {
                 try {
-                  const lastVisitedPath = localStorage.getItem('lastVisitedPath');
-                  const currentPath = window.location.pathname;
-                  if (!lastVisitedPath && currentPath !== '/login' && currentPath !== '/register') {
-                    localStorage.setItem('lastVisitedPath', currentPath);
-                  }
-
                   await signInWithGoogle();
-                  const fallbackPath = '/';
-                  const redirectTo = localStorage.getItem('lastVisitedPath');
-                  const validRedirect =
-                    redirectTo &&
-                    redirectTo !== '/login' &&
-                    redirectTo !== '/register' &&
-                    redirectTo !== window.location.pathname;
-
-                  if (validRedirect) {
-                    console.log('Redirecting to last valid path:', redirectTo);
-                    navigate(redirectTo, { replace: true });
-                  } else {
-                    console.log('No valid redirect path. Redirecting to fallback:', fallbackPath);
-                    navigate(fallbackPath, { replace: true });
-                  }
-                  return;
-                } catch (err) {
+                  const token = await auth.currentUser.getIdToken();
+                  window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;                } catch (err) {
                   console.error('Google login failed:', err);
                 }
               }}
