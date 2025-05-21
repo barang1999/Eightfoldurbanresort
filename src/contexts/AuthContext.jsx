@@ -8,8 +8,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   setPersistence,
-  browserLocalPersistence,
-  getRedirectResult
+  browserLocalPersistence
 } from 'firebase/auth';
 import { auth } from '../firebase'; // from your firebase.js
 import { getFirestore, doc, getDoc } from 'firebase/firestore';
@@ -25,11 +24,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getRedirectResult(auth).catch(() => {
-      // Suppress Firebase fallback redirect handler
-    });
-  }, []);
 
   useEffect(() => {
     setPersistence(auth, browserLocalPersistence).then(() => {
