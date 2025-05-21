@@ -183,13 +183,14 @@ export default function Header({ hideMenu = false }) {
           >
             <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6 pb-40">
 
-              <a href="/gallery" className="block border-b pb-2">Gallery</a>
-              <a href="/tours" className="block border-b pb-2">Tour & Experiences</a>
-              <a href="/sankya" className="block border-b pb-2">Restaurant & Bar</a>
-              <a href="/spa" className="block border-b pb-2">Wellness & Spa</a>
-              <a href="/about" className="block border-b pb-2">About Us</a>
-              <a href="/contact" className="block border-b pb-2">Contact Us</a>
-              <a
+              <motion.a whileTap={{ scale: 0.97 }} href="/gallery" className="block border-b pb-2">Gallery</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/tours" className="block border-b pb-2">Tour & Experiences</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/sankya" className="block border-b pb-2">Restaurant & Bar</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/spa" className="block border-b pb-2">Wellness & Spa</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/about" className="block border-b pb-2">About Us</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/contact" className="block border-b pb-2">Contact Us</motion.a>
+              <motion.a
+                whileTap={{ scale: 0.97 }}
                 href="#"
                 onClick={(e) => {
                   e.preventDefault();
@@ -199,7 +200,7 @@ export default function Header({ hideMenu = false }) {
                 className="block border-b pb-2"
               >
                 Booking
-              </a>
+              </motion.a>
 
             </div>
             <div className="px-6 py-4 border-t text-sm text-gray-500 bg-white">

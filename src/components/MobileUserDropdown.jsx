@@ -64,15 +64,18 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
               </div>
 
               <ul className="text-[15px] font-light text-gray-800 text-left space-y-2">
-                <li className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
+                <motion.li
+                  whileTap={{ scale: 0.97 }}
+                  className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
                   onClick={() => {
                     const bookingBaseUrl = import.meta.env.VITE_BOOKING_URL;
                     window.location.href = `${bookingBaseUrl}/account/reservations`;
                   }}
                 >
                   Your reservations
-                </li>
-                <li
+                </motion.li>
+                <motion.li
+                  whileTap={{ scale: 0.97 }}
                   className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
                   onClick={() => {
                     const bookingBaseUrl = import.meta.env.VITE_BOOKING_URL;
@@ -80,8 +83,9 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
                   }}
                 >
                   Your information
-                </li>
-                <li
+                </motion.li>
+                <motion.li
+                  whileTap={{ scale: 0.97 }}
                   className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
                   onClick={() => {
                     const bookingBaseUrl = import.meta.env.VITE_BOOKING_URL;
@@ -89,7 +93,7 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
                   }}
                 >
                   Your stay preferences
-                </li>
+                </motion.li>
                 {/*
                 <li
                   className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
@@ -100,7 +104,8 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
                   Change currency
                 </li>
                 */}
-                <li
+                <motion.li
+                  whileTap={{ scale: 0.97 }}
                   className="text-left pt-2 border-t border-gray-200 hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
                   onClick={() => {
                     navigate("/contact");
@@ -108,8 +113,9 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
                   }}
                 >
                   Help and support
-                </li>
-                <li
+                </motion.li>
+                <motion.li
+                  whileTap={{ scale: 0.97 }}
                   className="text-left hover:bg-gray-50 px-2 py-1 rounded-md transition-colors cursor-pointer"
                   onClick={async () => {
                     setLoggingOut(true);
@@ -125,7 +131,7 @@ const MobileUserDropdown = ({ user, setShowMobileDropdown }) => {
                   }}
                 >
                   {loggingOut ? "Logging out..." : "Logout"}
-                </li>
+                </motion.li>
               </ul>
             </>
           ) : (

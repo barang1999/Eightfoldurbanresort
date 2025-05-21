@@ -242,7 +242,7 @@ const [loading, setLoading] = useState(true);
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 40 }}
         transition={{ duration: 0.3 }}
-        className="bg-white w-screen sm:w-[95vw] max-w-none sm:max-w-xl py-8 px-6 rounded-none sm:rounded shadow-lg overflow-y-auto max-h-screen sm:max-h-[95vh] relative"
+        className="bg-white w-screen sm:w-[95vw] max-w-none sm:max-w-xl py-8 px-6 rounded-none sm:rounded shadow-lg overflow-y-auto max-h-[var(--app-height)] sm:max-h-[95vh] relative"
       >
         <button
           onClick={onClose}
