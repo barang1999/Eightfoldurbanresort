@@ -31,12 +31,19 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
 
   const handleGoogleLogin = async () => {
     try {
+      console.log("[GoogleLogin] Starting login process...");
       const provider = new GoogleAuthProvider();
+      console.log("[GoogleLogin] Created provider:", provider);
+      
       const result = await signInWithPopup(auth, provider);
+      console.log("[GoogleLogin] Sign-in result:", result);
+
       const token = await result.user.getIdToken();
+      console.log("[GoogleLogin] Token received:", token);
+
       window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
     } catch (error) {
-      console.error("Google login failed:", error);
+      console.error("[GoogleLogin] Login failed:", error);
     }
   };
 
