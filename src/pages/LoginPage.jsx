@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { auth } from '../firebase';
+import { auth, GoogleAuthProvider, signInWithPopup } from '../firebase';
 
 export default function LoginPage() {
-  const { signInWithEmail, signInWithGoogle, signInWithFacebook } = useAuth();
+  const { signInWithEmail, signInWithFacebook } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -88,9 +88,11 @@ window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?t
             <button
               onClick={async () => {
                 try {
-                  await signInWithGoogle();
-                  const token = await auth.currentUser.getIdToken();
-                  window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;                } catch (err) {
+                  const provider = new GoogleAuthProvider();
+                  const result = await signInWithPopup(auth, provider);
+                  const token = await result.user.getIdToken();
+                  window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+                } catch (err) {
                   console.error('Google login failed:', err);
                 }
               }}
