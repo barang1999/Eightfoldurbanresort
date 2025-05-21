@@ -40,6 +40,7 @@ export default function SpaPage() {
       try {
         const res = await fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/spa?propertyId=${propertyId}`);
         const data = await res.json();
+        console.log("✅ Spa data:", data); // Debug line to verify response
         setSpaMenu(data.sort((a, b) => (a.priority ?? 0) - (b.priority ?? 0)));
       } catch (err) {
         console.error('Failed to fetch spa menu:', err);
