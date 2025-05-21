@@ -19,6 +19,7 @@ import Footer from '../components/Footer';
 import MapEmbed from '../components/MapEmbed';
 import MobileBookingModal from '../components/MobileBookingModal';
 import MobileStickyCTA from '../components/MobileStickyCTA';
+import HeroBanner from '../components/HeroBanner';
 
 export default function Home() {
   // BookingSearchBox local state for controlled props
@@ -133,51 +134,41 @@ export default function Home() {
       ) : (
         <>
           <Header hideMenu={hideMainMenu} />
-          <section
-            className="relative h-screen bg-cover bg-center flex items-center justify-center"
-            style={{ backgroundImage: "url('/hero-pool.jpg')" }}
-          >
-            <div className="absolute inset-0 bg-black/20 z-0"></div>
-
-            <div className="relative z-10 text-left px-6 md:px-12 mt-60 mb--60">
-              <h1 className="text-white text-4xl md:text-6xl font-heading mb-4 drop-shadow">
-                Eightfold Urban Resort
-              </h1>
-              <p className="text-white text-lg font-light drop-shadow text-left md:text-center">
-                A Luxurious Retreat near Angkor Wat
-              </p>
-            </div>
-            <div className="hidden md:block">
-              <BookingSearchBox
-                rooms={rooms}
-                setRooms={setRooms}
-                selectedDates={selectedDates}
-                setSelectedDates={setSelectedDates}
-                showPicker={showPicker}
-                setShowPicker={setShowPicker}
-                showGuests={showGuests}
-                setShowGuests={setShowGuests}
-                onSearch={() => console.log('Search triggered')}
-              />
-            </div>
-
-            {/* Mobile Booking Modal */}
-            <MobileBookingModal
-              showRates={showRates}
-              setShowRates={setShowRates}
-              showMobileCalendar={showMobileCalendar}
-              setShowMobileCalendar={setShowMobileCalendar}
-              selectedDates={selectedDates}
-              setSelectedDates={setSelectedDates}
+          <HeroBanner
+            backgroundImage="/hero-pool.jpg"
+            title="Eightfold Urban Resort"
+            subtitle="A Luxurious Retreat near Angkor Wat"
+          />
+          <div className="hidden md:block">
+            <BookingSearchBox
               rooms={rooms}
               setRooms={setRooms}
-              selectedRate={selectedRate}
-              setSelectedRate={setSelectedRate}
+              selectedDates={selectedDates}
+              setSelectedDates={setSelectedDates}
+              showPicker={showPicker}
+              setShowPicker={setShowPicker}
+              showGuests={showGuests}
+              setShowGuests={setShowGuests}
+              onSearch={() => console.log('Search triggered')}
             />
+          </div>
 
-            {/* Mobile Sticky CTA */}
-            <MobileStickyCTA onClick={() => setShowRates(true)} />
-          </section>
+          {/* Mobile Booking Modal */}
+          <MobileBookingModal
+            showRates={showRates}
+            setShowRates={setShowRates}
+            showMobileCalendar={showMobileCalendar}
+            setShowMobileCalendar={setShowMobileCalendar}
+            selectedDates={selectedDates}
+            setSelectedDates={setSelectedDates}
+            rooms={rooms}
+            setRooms={setRooms}
+            selectedRate={selectedRate}
+            setSelectedRate={setSelectedRate}
+          />
+
+          {/* Mobile Sticky CTA */}
+          <MobileStickyCTA onClick={() => setShowRates(true)} />
 
           <motion.div
             initial={false}
