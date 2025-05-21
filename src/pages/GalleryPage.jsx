@@ -234,10 +234,10 @@ useEffect(() => {
             {imagesToRender.map(({ src, alt, key }, index) => (
                 <div key={key} onClick={() => {
                   setLightboxIndex(imagesToRender.findIndex(image => image.key === key));
-                  setLightboxImage(`/${src}`);
+                  setLightboxImage(src);
                 }} className="cursor-pointer">
                   <img
-                    src={`/${src}`}
+                    src={src}
                     alt={alt}
                     className="w-full h-64 object-cover rounded shadow-sm transition-transform duration-300 transform hover:scale-105 hover:brightness-110"
                     loading="lazy"
