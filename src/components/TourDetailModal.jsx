@@ -58,11 +58,22 @@ export default function TourDetailModal({ tour, onClose }) {
               {tour.imageUrls?.length > 0 && (
                 <div>
                   <div className="relative overflow-hidden bg-white">
-                    <img
+                    <motion.img
+                      key={currentImageIndex}
                       src={tour.imageUrls[currentImageIndex]}
                       alt="Tour"
                       loading="lazy"
                       className="w-full h-[420px] md:h-[470px] object-cover object-center rounded-xl shadow-md"
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      onDragEnd={(e, info) => {
+                        if (info.offset.x > 50) {
+                          setCurrentImageIndex((prev) => (prev - 1 + tour.imageUrls.length) % tour.imageUrls.length);
+                        } else if (info.offset.x < -50) {
+                          setCurrentImageIndex((prev) => (prev + 1) % tour.imageUrls.length);
+                        }
+                      }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                     />
                     <button
                       onClick={() =>
