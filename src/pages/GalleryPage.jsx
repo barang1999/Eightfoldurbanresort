@@ -92,7 +92,7 @@ useEffect(() => {
     const nextIndex = (lightboxIndex + direction + imagesToRender.length) % imagesToRender.length;
     const nextImage = imagesToRender[nextIndex];
     setLightboxIndex(nextIndex);
-    setLightboxImage(`/${nextImage.src}`);
+    setLightboxImage(nextImage.src);
   };
 
   useEffect(() => {
