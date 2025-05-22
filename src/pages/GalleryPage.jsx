@@ -9,6 +9,7 @@ const galleryData = {
 
 };
 import { useState, useEffect } from 'react';
+import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
 import HeroBanner from '../components/HeroBanner';
@@ -37,6 +38,21 @@ export default function GalleryPage() {
 
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  const navigateLightbox = (direction) => {
+    if (lightboxIndex == null) return;
+    const nextIndex = (lightboxIndex + direction + imagesToRender.length) % imagesToRender.length;
+    const nextImage = imagesToRender[nextIndex];
+    setLightboxIndex(nextIndex);
+    setLightboxImage(nextImage.src);
+  };
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => navigateLightbox(1),
+    onSwipedRight: () => navigateLightbox(-1),
+    preventDefaultTouchmoveEvent: true,
+    trackTouch: true
+  });
 
 useEffect(() => {
   const handleScroll = () => {
@@ -86,14 +102,6 @@ useEffect(() => {
     })) || [];
     imagesToRender = showAllImages ? tabImages : tabImages.slice(0, 6);
   }
-
-  const navigateLightbox = (direction) => {
-    if (lightboxIndex == null) return;
-    const nextIndex = (lightboxIndex + direction + imagesToRender.length) % imagesToRender.length;
-    const nextImage = imagesToRender[nextIndex];
-    setLightboxIndex(nextIndex);
-    setLightboxImage(nextImage.src);
-  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -260,50 +268,51 @@ useEffect(() => {
       </section>
 
       {lightboxImage && (
-        <div
-          className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center"
-          onClick={() => setLightboxImage(null)}
-        >
           <div
-            className="bg-white rounded-md shadow-md p-2 max-w-5xl max-h-[90vh] w-full h-auto overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              src={lightboxImage}
-              alt="Enlarged view"
-              className="w-full h-auto max-h-[80vh] object-contain rounded"
-            />
-          </div>
-          <button
+            {...handlers}
+            className="fixed inset-0 z-50 bg-black bg-opacity-80 flex items-center justify-center"
             onClick={() => setLightboxImage(null)}
-            className="absolute top-4 right-4 text-white text-2xl font-bold"
           >
-            &times;
-          </button>
-          <button
-            className="absolute left-6 text-white hover:text-[#a28e68] transition"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateLightbox(-1);
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            className="absolute right-6 text-white hover:text-[#a28e68] transition"
-            onClick={(e) => {
-              e.stopPropagation();
-              navigateLightbox(1);
-            }}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-      )}
+            <div
+              className="bg-white rounded-md shadow-md p-2 max-w-5xl max-h-[90vh] w-full h-auto overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={lightboxImage}
+                alt="Enlarged view"
+                className="w-full h-auto max-h-[80vh] object-contain rounded"
+              />
+            </div>
+            <button
+              onClick={() => setLightboxImage(null)}
+              className="absolute top-4 right-4 text-white text-2xl font-bold"
+            >
+              &times;
+            </button>
+            <button
+              className="absolute left-6 text-white hover:text-[#a28e68] transition"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateLightbox(-1);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              className="absolute right-6 text-white hover:text-[#a28e68] transition"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigateLightbox(1);
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        )}
 
      
 
