@@ -54,9 +54,14 @@ export default function Header({ hideMenu = false }) {
 
         <div className="flex-1 flex justify-center md:justify-center items-center relative">
           <div sx={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-            <a href="/" className="text-xl md:text-2xl font-heading text-gray-800 tracking-wide hover:opacity-80 transition">
+            <motion.a
+              href="/"
+              whileTap={{ scale: 0.94, rotate: -2 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+              className="text-xl md:text-2xl font-heading text-gray-800 tracking-wide hover:opacity-80 transition"
+            >
               EIGHTFOLD
-            </a>
+            </motion.a>
           </div>
         </div>
 

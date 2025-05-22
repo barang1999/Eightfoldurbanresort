@@ -11,7 +11,9 @@ const NextArrow = ({ onClick }) => (
     onClick={onClick}
   >
     <div className="w-8 h-8 rounded-full border border-[#a28e68] flex items-center justify-center bg-white opacity-50">
-      <span className="text-black text-base font-light">{'>'}</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+        <polyline points="9 6 15 12 9 18" />
+      </svg>
     </div>
   </div>
 );
@@ -22,7 +24,9 @@ const PrevArrow = ({ onClick }) => (
     onClick={onClick}
   >
     <div className="w-8 h-8 rounded-full border border-[#a28e68] flex items-center justify-center bg-white opacity-50">
-      <span className="text-black text-base font-light">{'<'}</span>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+        <polyline points="15 6 9 12 15 18" />
+      </svg>
     </div>
   </div>
 );

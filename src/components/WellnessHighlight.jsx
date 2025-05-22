@@ -58,18 +58,22 @@ export default function WellnessHighlight({ items = [], onDiscover }) {
         <div className="flex justify-between items-center mt-6 px-6 md:px-16">
           <button
             onClick={handlePrev}
-            className="border border-black rounded-full w-10 h-10 flex items-center justify-center text-xl hover:bg-black hover:text-white"
+            className="border border-black rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:bg-black hover:text-white"
           >
-            ‹
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <polyline points="15 6 9 12 15 18" />
+            </svg>
           </button>
           <span className="text-sm text-gray-600">
             {currentIndex + 1} / {items.length}
           </span>
           <button
             onClick={handleNext}
-            className="border border-black rounded-full w-10 h-10 flex items-center justify-center text-xl hover:bg-black hover:text-white"
+            className="border border-black rounded-full w-12 h-12 flex items-center justify-center text-2xl hover:bg-black hover:text-white"
           >
-            ›
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+              <polyline points="9 6 15 12 9 18" />
+            </svg>
           </button>
         </div>
       </div>
