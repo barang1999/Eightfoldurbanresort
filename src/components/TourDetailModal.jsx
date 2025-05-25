@@ -1,4 +1,11 @@
 import React from 'react';
+function parseDescription(description) {
+  if (!description) return null;
+  const lines = description.split('\n').filter(Boolean);
+  return lines.map((line, i) => (
+    <p key={i} className="leading-relaxed text-sm text-gray-700">{line}</p>
+  ));
+}
 import { motion, AnimatePresence } from "framer-motion";
 import TourBookingModal from './TourBookingModal';
 import { useAuth } from '../contexts/AuthContext';
@@ -199,7 +206,9 @@ export default function TourDetailModal({ tour, onClose }) {
 
               <div>
                 <strong>Description:</strong>
-                <p className="mt-1">{tour.description}</p>
+                <div className="mt-1 space-y-2">
+                  {parseDescription(tour.description)}
+                </div>
                 {tour.included && (
                   <div className="flex items-start gap-2 mt-2">
                     <svg viewBox="0 0 128 128" width="16" height="16" className="fill-green-600 mt-1">

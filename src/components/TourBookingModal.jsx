@@ -64,6 +64,7 @@ const [loading, setLoading] = useState(true);
   const [addBackTown, setAddBackTown] = useState(false);
 
   const [showCalendar, setShowCalendar] = useState(false);
+  const [roomNumber, setRoomNumber] = useState("");
 
   useEffect(() => {
     const fetchUserDetails = async () => {
@@ -208,7 +209,8 @@ const [loading, setLoading] = useState(true);
       vat,
       total,
       included: tour.included || "",
-      notIncluded: tour.notIncluded || ""
+      notIncluded: tour.notIncluded || "",
+      roomNumber
     };
 
     // Log the payload before sending
@@ -461,6 +463,16 @@ const [loading, setLoading] = useState(true);
           )}
         </div>
 
+        {/* Room Number */}
+        <div className="mb-4">
+          <label className="block font-medium mb-1">Room Number</label>
+          <input
+            className="w-full border px-3 py-2 rounded"
+            value={roomNumber}
+            onChange={(e) => setRoomNumber(e.target.value)}
+          />
+        </div>
+
         {/* Special Request */}
         <div className="mb-4">
           <label className="block font-medium mb-1">Special Request</label>
@@ -470,6 +482,9 @@ const [loading, setLoading] = useState(true);
             value={specialRequest}
             onChange={(e) => setSpecialRequest(e.target.value)}
           />
+          <p className="text-sm text-gray-500 mt-1">
+            Your request will be shared with the hotel and will be considered based on your tour package inclusions, availability, and the applicable terms and conditions.
+          </p>
         </div>
 
         {/* Summary */}
