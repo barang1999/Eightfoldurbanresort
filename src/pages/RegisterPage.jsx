@@ -77,7 +77,11 @@ export default function RegisterPage() {
         navigate('/login');
       }, 0);
     } catch (err) {
-      setError(err.message);
+      if (err.code === 'auth/email-already-in-use') {
+        setError("This email is already registered. Please log in instead.");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
