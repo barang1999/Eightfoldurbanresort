@@ -25,6 +25,31 @@ export default function RegisterPage() {
         email: user.email,
         createdAt: new Date().toISOString(),
       });
+
+      // Also sync with backend MongoDB
+      let propertyId = localStorage.getItem('propertyId');
+      if (!propertyId) {
+        propertyId = import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID;
+      }
+      if (!propertyId || propertyId.length !== 24) {
+        throw new Error('Missing or invalid property ID. Please reload the page or contact support.');
+      }
+      const mongoPayload = {
+        userUid: user.uid,
+        email: user.email,
+        propertyId,
+      };
+
+      const apiBaseUrl = import.meta.env.VITE_ADMIN_API_URL;
+      const response = await fetch(`${apiBaseUrl}/api/user/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(mongoPayload),
+      });
+
+      const resultData = await response.json();
+      console.log('[Email Register Sync] MongoDB response:', resultData);
+
       console.log('Registered successfully, navigating...');
       setTimeout(() => {
         navigate('/login');
@@ -91,12 +116,38 @@ export default function RegisterPage() {
             <button
               onClick={async () => {
                 try {
-                  const result = await signInWithGoogle();
+                  const result = await signInWithGoogle({ prompt: 'select_account' });
                   if (result?.user) {
+                    const user = result.user;
+                    let propertyId = localStorage.getItem('propertyId');
+                    if (!propertyId) {
+                      propertyId = import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID;
+                    }
+
+                    if (!propertyId || propertyId.length !== 24) {
+                      throw new Error('Missing or invalid property ID. Please reload the page or contact support.');
+                    }
+
+                    const mongoPayload = {
+                      userUid: user.uid,
+                      email: user.email,
+                      propertyId,
+                    };
+
+                    const apiBaseUrl = import.meta.env.VITE_ADMIN_API_URL;
+                    const response = await fetch(`${apiBaseUrl}/api/user/register`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(mongoPayload),
+                    });
+
+                    const resultData = await response.json();
+                    console.log('[Google Register Sync] MongoDB response:', resultData);
+
                     navigate('/login');
                   }
                 } catch (err) {
-                  console.error(err.message);
+                  console.error('[Register Error]', err.message);
                   setError(err.message);
                 }
               }}
