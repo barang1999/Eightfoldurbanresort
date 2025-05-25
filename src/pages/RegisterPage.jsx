@@ -38,6 +38,27 @@ export default function RegisterPage() {
         userUid: user.uid,
         email: user.email,
         propertyId,
+        profile: {
+          identity: {
+            fullName: '',
+            title: '',
+            dob: '',
+            nationality: '',
+            placeOfBirth: '',
+          },
+          contact: {
+            phone: '',
+            address: '',
+            countryCode: '',
+          },
+          business: {
+            businessEmail: '',
+            businessPhone: '',
+            billingAddress: '',
+            businessAddress: '',
+            countryCode: '',
+          }
+        }
       };
 
       const apiBaseUrl = import.meta.env.VITE_ADMIN_API_URL;
@@ -132,6 +153,27 @@ export default function RegisterPage() {
                       userUid: user.uid,
                       email: user.email,
                       propertyId,
+                      profile: {
+                        identity: {
+                          fullName: user.displayName || '',
+                          title: '',
+                          dob: '',
+                          nationality: '',
+                          placeOfBirth: '',
+                        },
+                        contact: {
+                          phone: user.phoneNumber || '',
+                          address: '',
+                          countryCode: '',
+                        },
+                        business: {
+                          businessEmail: '',
+                          businessPhone: '',
+                          billingAddress: '',
+                          businessAddress: '',
+                          countryCode: '',
+                        }
+                      }
                     };
 
                     const apiBaseUrl = import.meta.env.VITE_ADMIN_API_URL;
