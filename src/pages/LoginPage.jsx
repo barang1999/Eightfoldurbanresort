@@ -41,7 +41,13 @@ export default function LoginPage() {
       });
     } catch (err) {
       console.error("Login error", err);
-      setError(err.message);
+      if (err.code === 'auth/invalid-credential') {
+        setError("Invalid email or password. Please try again.");
+      } else if (err.code === 'auth/user-not-found') {
+        setError("Account not found. Please register first.");
+      } else {
+        setError("Login failed. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
