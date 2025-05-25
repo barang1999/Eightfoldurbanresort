@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { auth } from '../firebase';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage() {
   const { signInWithEmail, signInWithFacebook } = useAuth();
@@ -18,11 +19,27 @@ export default function LoginPage() {
   const handleLogin = async () => {
     setError('');
     setLoading(true);
+
     try {
       await signInWithEmail(email, password);
-      const token = await auth.currentUser.getIdToken();
-window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${token}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const idToken = await user.getIdToken();
+          const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idToken }),
+          });
+
+          const { customToken } = await res.json();
+          const encodedToken = encodeURIComponent(customToken);
+
+          window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${encodedToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+        }
+      });
     } catch (err) {
+      console.error("Login error", err);
       setError(err.message);
     } finally {
       setLoading(false);
