@@ -13,6 +13,8 @@ import Layout from './components/Layout';
 import AboutUsPage from './pages/AboutUs';
 import GalleryPage from './pages/GalleryPage';
 import ContactUsPage from './pages/ContactUs';
+import HotelPolicyPage from './pages/HotelPolicyPage';
+import HotelFacilityPage from './pages/HotelFacilityPage';
 
 export default function App() {
   return (
@@ -37,6 +39,8 @@ export default function App() {
         <Route path="/about" element={<Layout><AboutUsPage /></Layout>} />
         <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
         <Route path="/contact" element={<Layout><ContactUsPage /></Layout>} />
+        <Route path="/policies" element={<Layout><HotelPolicyPage /></Layout>} />
+        <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
       </Routes>
     </Router>
   );

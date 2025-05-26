@@ -16,7 +16,7 @@ export default function Footer({ id }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 text-left gap-12 w-full max-w-6xl mx-auto mt-8 justify-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-4 text-left gap-12 w-full max-w-6xl mx-auto mt-8 justify-items-center">
         <div className="w-full md:w-auto md:text-left text-center">
           <h4 className="text-lg font-light mb-2 font-serif text-gray-700">Location</h4>
           <p className="text-sm leading-relaxed text-gray-600 font-light">
@@ -38,6 +38,13 @@ export default function Footer({ id }) {
           <p className="text-sm leading-relaxed text-gray-600 font-light">
             Parking included<br />
             Outdoor parking
+          </p>
+        </div>
+        <div className="w-full md:w-auto md:text-left text-center">
+          <h4 className="text-lg font-light mb-2 font-serif text-gray-700">Property</h4>
+          <p className="text-sm leading-relaxed text-gray-600 font-light">
+            <a href="/policies" className="underline text-[#8a6b41] font-light block mb-1">View Hotel Policies</a>
+            <a href="/facilities" className="underline text-[#8a6b41] font-light block">View Hotel Facilities</a>
           </p>
         </div>
       </div>

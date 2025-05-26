@@ -88,11 +88,7 @@ export default function AboutUsPage() {
         </div>
       </section>
 
-      {/* Hotel Facilities Section */}
-      <HotelFacilitySection propertyId={import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID} />
 
-      {/* Hotel Policies Section */}
-      <HotelPolicySection propertyId={import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID} />
     </motion.div>
   );
 }

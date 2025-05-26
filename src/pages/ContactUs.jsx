@@ -50,7 +50,7 @@ export default function ContactUsPage() {
       <Header />
 
       <HeroBanner
-        backgroundImage="/hotel6.webp"
+        backgroundImage="/Eightfold.webp"
         title="Contact Us"
         subtitle="We’re here to assist you with your stay at Eightfold Urban Resort"
       />

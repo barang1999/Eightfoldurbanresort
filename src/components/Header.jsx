@@ -171,6 +171,7 @@ export default function Header({ hideMenu = false }) {
               <li><a href="/tours" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Tour & Experiences</a></li>
               <li><a href="/sankya" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Restaurant & Bar</a></li>
               <li><a href="/spa" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Wellness & Spa</a></li>
+              <li><a href="/facilities" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Facilities</a></li>
               <li><a href="/about" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">About Us</a></li>
               <li><a href="/contact" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Contact Us</a></li>
               <li>
@@ -207,6 +208,7 @@ export default function Header({ hideMenu = false }) {
               <motion.a whileTap={{ scale: 0.97 }} href="/tours" className="block border-b pb-2">Tour & Experiences</motion.a>
               <motion.a whileTap={{ scale: 0.97 }} href="/sankya" className="block border-b pb-2">Restaurant & Bar</motion.a>
               <motion.a whileTap={{ scale: 0.97 }} href="/spa" className="block border-b pb-2">Wellness & Spa</motion.a>
+              <motion.a whileTap={{ scale: 0.97 }} href="/facilities" className="block border-b pb-2">Facilities</motion.a>
               <motion.a whileTap={{ scale: 0.97 }} href="/about" className="block border-b pb-2">About Us</motion.a>
               <motion.a whileTap={{ scale: 0.97 }} href="/contact" className="block border-b pb-2">Contact Us</motion.a>
               <motion.a

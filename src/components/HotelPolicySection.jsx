@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 // Reusable key-value line display
 const PolicyItem = ({ title, content }) => (
-  <div className="flex justify-between items-start py-2 border-b border-gray-200">
-    <span className="font-medium text-gray-800">{title}</span>
-    <span className="text-gray-600 text-right max-w-sm">{content}</span>
+  <div className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 space-y-2">
+    <h3 className="text-lg text-[#8a6b41] font-serif">{title}</h3>
+    <p className="text-sm text-gray-700">{content}</p>
   </div>
 );
 
@@ -32,83 +32,94 @@ const HotelPolicySection = ({ propertyId }) => {
   if (!policy) return null;
 
   return (
-    <section className="py-12 bg-gray-50">
-      {/* Section header */}
-      <h2 className="text-2xl font-semibold text-center mb-8">Hotel Policies</h2>
-
-      {/* Policy list layout */}
-      <div className="max-w-4xl mx-auto px-6 space-y-4">
-        <PolicyItem title="Check-in / Check-out" content={`${policy.checkIn || 'N/A'} - ${policy.checkOut || 'N/A'}`} />
+    <section className="py-12 ">
+      <h2 className="text-3xl font-serif text-center mb-12 text-[#8a6b41]">Hotel Policies</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-5xl mx-auto px-6">
+        <PolicyItem title="Check-in / Check-out" content={`Check-in: ${policy.checkIn || 'N/A'}, Check-out: ${policy.checkOut || 'N/A'}`} />
         <PolicyItem
           title="Cancellation"
           content={
             policy.cancellationPolicy?.cancellationAllowed
-              ? `Allowed with ${policy.cancellationPolicy.cancellationNoticeDays} days notice`
-              : 'Not allowed'
+              ? `Cancellations are permitted with a minimum notice of ${policy.cancellationPolicy.cancellationNoticeDays} days.`
+              : 'Cancellations are not permitted.'
           }
         />
         <PolicyItem
           title="Children & Beds"
-          content={`Children: ${policy.childrenAndBeds?.childrenAllowed ? 'Allowed' : 'Not allowed'}, 
-          Cribs: ${policy.childrenAndBeds?.cribAvailable ? `$${policy.childrenAndBeds.cribPrice}` : 'Not available'}, 
-          Extra Bed: ${policy.childrenAndBeds?.extraBedAvailable ? `$${policy.childrenAndBeds.extraBedPrice}` : 'Not available'}`}
+          content={`Children are ${policy.childrenAndBeds?.childrenAllowed ? 'welcome' : 'not permitted'}. Cribs available at $${policy.childrenAndBeds?.cribPrice}, extra beds at $${policy.childrenAndBeds?.extraBedPrice}.`}
         />
-        <PolicyItem title="Pets" content={policy.petsPolicy || 'Not specified'} />
+        <PolicyItem title="Pets" content={policy.petsPolicy || 'Pets are not permitted.'} />
         <PolicyItem
           title="Age Restriction"
           content={
             policy.ageRestriction?.required
-              ? `Minimum age: ${policy.ageRestriction.minimumAge}`
-              : 'No age restriction'
+              ? `Minimum age requirement is ${policy.ageRestriction.minimumAge} years.`
+              : 'No age restrictions apply.'
           }
         />
         <PolicyItem
           title="Smoking"
-          content={policy.smokingPolicy?.allowed ? 'Allowed' : `Not allowed (${policy.smokingPolicy?.notes || ''})`}
+          content={
+            policy.smokingPolicy?.allowed
+              ? 'Smoking is permitted in designated areas.'
+              : `Smoking is not permitted. ${policy.smokingPolicy?.notes || ''}`
+          }
         />
         <PolicyItem
           title="Damage Deposit"
           content={
             policy.damageDeposit?.required
-              ? `Required: $${policy.damageDeposit.amount} (Refund via ${policy.damageDeposit.refundMethod})`
-              : 'Not required'
+              ? `A damage deposit of $${policy.damageDeposit.amount} is required. Refundable via ${policy.damageDeposit.refundMethod}.`
+              : 'No damage deposit is required.'
           }
         />
         <PolicyItem
           title="Quiet Hours"
           content={
             policy.quietHours?.enabled
-              ? `${policy.quietHours.start} - ${policy.quietHours.end}`
-              : 'Not enforced'
+              ? `Quiet hours are observed from ${policy.quietHours.start} to ${policy.quietHours.end}.`
+              : 'No quiet hours are enforced.'
           }
         />
         <PolicyItem
           title="Parties"
-          content={policy.partyPolicy?.allowed ? 'Allowed' : `Not allowed (${policy.partyPolicy?.notes || ''})`}
+          content={
+            policy.partyPolicy?.allowed
+              ? 'Events and parties are allowed on the premises.'
+              : `Events and parties are not allowed. ${policy.partyPolicy?.notes || ''}`
+          }
         />
         <PolicyItem
           title="Internet"
           content={
             policy.internet?.available
-              ? `${policy.internet.coverage} (${policy.internet.isFree ? 'Free' : 'Paid'})`
-              : 'Not available'
+              ? `Internet is available in ${policy.internet.coverage}, and is ${policy.internet.isFree ? 'complimentary' : 'subject to additional charges'}.`
+              : 'Internet access is not available.'
           }
         />
         <PolicyItem
           title="Parking"
           content={
             policy.parking?.available
-              ? `${policy.parking.type} parking ${policy.parking.requiresReservation ? '(Reservation needed)' : ''} ${policy.parking.isFree ? '(Free)' : ''}`
-              : 'No parking available'
+              ? `${policy.parking.type.charAt(0).toUpperCase() + policy.parking.type.slice(1)} parking is available${policy.parking.requiresReservation ? ', and reservation is required' : ''}. ${policy.parking.isFree ? ' Complimentary for all guests.' : ''}`
+              : 'No parking is available on the premises.'
           }
         />
         <PolicyItem
           title="Payment Methods"
-          content={policy.paymentMethods?.length ? policy.paymentMethods.join(', ') : 'Not specified'}
+          content={
+            policy.paymentMethods?.length
+              ? `We accept the following payment methods: ${policy.paymentMethods.join(', ')}.`
+              : 'No payment methods specified.'
+          }
         />
         <PolicyItem
           title="VAT"
-          content={policy.vat?.enabled ? `${policy.vat.percentage}% included` : 'Not applicable'}
+          content={
+            policy.vat?.enabled
+              ? `All rooms fee include VAT at ${policy.vat.percentage}%.`
+              : 'VAT is not applied to our pricing.'
+          }
         />
       </div>
     </section>
