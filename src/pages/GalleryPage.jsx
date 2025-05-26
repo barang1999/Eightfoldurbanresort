@@ -38,6 +38,8 @@ export default function GalleryPage() {
 
   const [lightboxImage, setLightboxImage] = useState(null);
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  // Track loaded state for each image in a single object
+  const [loadedImages, setLoadedImages] = useState({});
 
   const navigateLightbox = (direction) => {
     if (lightboxIndex == null) return;
@@ -240,18 +242,41 @@ useEffect(() => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {imagesToRender.map(({ src, alt, key }, index) => (
-                <div key={key} onClick={() => {
+              <motion.div
+                key={key}
+                onClick={() => {
                   setLightboxIndex(imagesToRender.findIndex(image => image.key === key));
                   setLightboxImage(src);
-                }} className="cursor-pointer">
+                }}
+                className="cursor-pointer"
+                initial={{ opacity: 0, scale: 0.90 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.5, delay: index * 0.05, ease: 'easeOut' }}
+              >
+                <div className="w-full h-64 rounded overflow-hidden relative">
+                  {!loadedImages[key] && (
+                    <div className="absolute inset-0 bg-gray-200 animate-pulse z-0" />
+                  )}
                   <img
                     src={src}
                     alt={alt}
-                    className="w-full h-64 object-cover rounded shadow-sm transition-transform duration-300 transform hover:scale-105 hover:brightness-110"
+                    onLoad={() => setLoadedImages(prev => ({ ...prev, [key]: true }))}
+                    onError={() => {
+                      console.error(`Failed to load image: ${src}`);
+                      setLoadedImages(prev => ({ ...prev, [key]: true }));
+                    }}
+                    className={`
+                      w-full h-64 object-cover rounded shadow-sm
+                      transition duration-700 ease-out
+                      hover:scale-105 hover:brightness-110 z-10 relative
+                      ${loadedImages[key] ? 'opacity-100' : 'opacity-0'}
+                    `}
                     loading="lazy"
                   />
                 </div>
-              ))}
+              </motion.div>
+            ))}
           </div>
 
           {(galleryData[activeTab]?.length > 6 || activeTab === 'All') && (
