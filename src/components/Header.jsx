@@ -72,8 +72,8 @@ export default function Header({ hideMenu = false }) {
               href="/"
               whileTap={{ scale: 0.94, rotate: -2 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className={`text-xl md:text-2xl font-heading tracking-wide hover:opacity-80 transition-colors duration-300 
-  md:${(scrolled || hovered) ? 'text-gray-800' : 'text-white'} text-gray-800`}
+              className={`text-xl md:text-2xl font-heading tracking-wide hover:opacity-80 transition-colors duration-300
+  text-gray-800 ${scrolled || hovered ? 'md:text-gray-800' : 'md:text-white'}`}
             >
               EIGHTFOLD
             </motion.a>
