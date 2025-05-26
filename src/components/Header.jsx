@@ -10,6 +10,8 @@ export default function Header({ hideMenu = false }) {
   const [showMobileDropdown, setShowMobileDropdown] = useState(false);
   const { name, email, loading } = useUserProfile();
   const dropdownRef = useRef();
+  const [scrolled, setScrolled] = useState(false);
+  const [hovered, setHovered] = useState(false);
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -19,8 +21,20 @@ export default function Header({ hideMenu = false }) {
     }
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <header className="w-full z-50 bg-white shadow-sm md:fixed md:top-0">
+    <header
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={`w-full z-50 transition-all duration-300 ${scrolled || hovered ? 'bg-white shadow-sm text-gray-800' : 'bg-white/2 backdrop-blur-sm text-white'} md:fixed md:top-0`}
+    >
       <div className="relative flex items-center justify-between px-6 py-4 max-w-screen-xl mx-auto" sx={{ position: 'relative', display: 'flex', alignItems: 'center', height: 64 }}>
         {/* Left Section - Empty spacer */}
         <div className="flex-1"></div>
@@ -48,7 +62,7 @@ export default function Header({ hideMenu = false }) {
                 }`}
               ></span>
             </button>
-            <span className="text-gray-800 text-sm">Menu</span>
+            <span className="text-sm text-gray-800 transition-colors duration-300">Menu</span>
           </div>
         </div>
 
@@ -58,7 +72,8 @@ export default function Header({ hideMenu = false }) {
               href="/"
               whileTap={{ scale: 0.94, rotate: -2 }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="text-xl md:text-2xl font-heading text-gray-800 tracking-wide hover:opacity-80 transition"
+              className={`text-xl md:text-2xl font-heading tracking-wide hover:opacity-80 transition-colors duration-300 
+  md:${(scrolled || hovered) ? 'text-gray-800' : 'text-white'} text-gray-800`}
             >
               EIGHTFOLD
             </motion.a>
@@ -66,12 +81,12 @@ export default function Header({ hideMenu = false }) {
         </div>
 
         {/* Right Section - Language/Account Placeholder */}
-        <div className="flex-1 text-right text-gray-800 text-sm space-x-4">
+        <div className={`flex-1 text-right text-sm space-x-4`}>
           <div className="flex justify-end items-center space-x-4">
             <div className="hidden md:inline relative">
               <button
                 onClick={() => setShowDropdown((prev) => !prev)}
-                className="flex items-center space-x-2 text-gray-900 font-medium hover:opacity-80 transition"
+                className="flex items-center space-x-2 font-medium hover:opacity-80 transition-colors duration-300"
               >
                 {email ? (
                   <div className="w-8 h-8 rounded-full bg-[#B59B61] flex items-center justify-center">
@@ -93,7 +108,7 @@ export default function Header({ hideMenu = false }) {
                   {loading ? (
                     <div className="w-20 h-4 bg-gray-200 rounded-md animate-pulse" />
                   ) : (
-                    <span className="inline-block transition-opacity duration-300 ease-in-out opacity-100">
+                    <span className="inline-block transition-opacity duration-300 ease-in-out opacity-100 transition-colors">
                       {email ? name?.split(' ')[0] : 'Sign in / Sign up'}
                     </span>
                   )}
@@ -149,7 +164,7 @@ export default function Header({ hideMenu = false }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="hidden md:block bg-white text-gray-800 text-sm font-light border-t"
+            className={`hidden md:block ${(scrolled || hovered) ? 'bg-white text-gray-800' : 'bg-white/10 backdrop-blur-md text-white'} text-sm font-light border-t transition-colors duration-300`}
           >
             <ul className="flex justify-center space-x-6 py-2 uppercase tracking-wide">
               <li><a href="/gallery" className="relative px-3 py-1 rounded hover:bg-white transition-colors duration-300 after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:w-4/5 after:h-[2px] after:bg-primary after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:duration-300 after:origin-center">Gallery</a></li>

@@ -44,6 +44,15 @@ export default function Home() {
 
   // Page loading state for branding experience
   const [isLoading, setIsLoading] = useState(true);
+  // Scroll-to-top button state
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -141,7 +150,7 @@ export default function Home() {
           <HeroBanner
             backgroundImage="/hero-pool.webp"
             title="Eightfold Urban Resort"
-            subtitle="A Luxurious Retreat near Angkor Wat"
+            subtitle="A Serene Escape, Elevated by Hospitality"
           />
           <div className="hidden md:block">
             <BookingSearchBox
@@ -258,7 +267,12 @@ export default function Home() {
           </section>
 
           <section id="tour" className="scroll-mt-32 py-10 px-1 md:px-10 bg-white">
-            <TourShowcase title="Tours & Experiences" tours={tours} />
+            <TourShowcase
+              title="Tours & Experiences"
+              tours={tours
+                .filter(t => t.tags?.includes('temple'))
+                .sort((a, b) => (a.priority ?? 9999) - (b.priority ?? 9999))}
+            />
           </section>
           <section id="sustainability" className="bg-[#f9f7f3] py-16 md:py-20 px-6 scroll-mt-32">
             <div className="max-w-screen-xl mx-auto flex flex-col md:grid md:grid-cols-2 gap-8 items-center px-8 md:px-16 max-w-[1200px]">
@@ -285,7 +299,18 @@ export default function Home() {
 
           <MapEmbed id="location" propertyId="6803cba3dadf9a0d829427fe" />
 
-        
+          {showScrollTop && (
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="fixed bottom-6 right-6 z-50 bg-white/90 hover:bg-white text-[#8a6b41] p-3 rounded-full shadow-md transition-all duration-300"
+              aria-label="Scroll to top"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+              </svg>
+            </button>
+          )}
+
         </>
       )}
     </AnimatePresence>
