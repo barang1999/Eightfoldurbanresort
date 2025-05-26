@@ -36,6 +36,7 @@ export default function LoginPage() {
           const { customToken } = await res.json();
           const encodedToken = encodeURIComponent(customToken);
 
+          // Immediately redirect
           window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${encodedToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
         }
       });
@@ -202,6 +203,11 @@ export default function LoginPage() {
             </div>
           </div>
         </div>
+        {loading && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+            <span className="text-lg text-gray-700 font-medium">Logging in…</span>
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );
