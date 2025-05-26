@@ -70,8 +70,8 @@ export default function RestaurantPage({ name, propertyId }) {
               )
             : '',
           contact: restaurantData?.bookingContact || '',
-          buttonLabel: "Book a Table",
-          onClick: () => setShowBookingForm(true),
+          // buttonLabel: "Book a Table",
+          // onClick: () => setShowBookingForm(true),
           imageUrl: restaurantData?.photos?.slice(-1)[0] || "/restaurant5.jpg",
           altText: `${name} Restaurant`,
         }}

@@ -166,8 +166,7 @@ export default function FacilityPage({
       {infoSectionProps && (
         <>
           {console.log('[FacilityPage] infoSectionProps:', infoSectionProps)}
-          <FacilityInfoSection {...infoSectionProps} />
-        </>
+          <FacilityInfoSection {...infoSectionProps} hideSecondaryButton={true} />        </>
       )}
 
       {slideshowImages.length > 0 && (
@@ -186,9 +185,6 @@ export default function FacilityPage({
           </div>
         </section>
       )}
-
-      
-
 
       <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} title={infoModalTitle}>
         {typeof infoModalData === 'function'

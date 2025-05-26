@@ -6,6 +6,7 @@ export default function FacilityInfoSection({
   onClick = () => {},
   imageUrl = '',
   altText = '',
+  hideSecondaryButton = false,
 }) {
   return (
     <section className="bg-white px-6 py-16">
@@ -30,12 +31,14 @@ export default function FacilityInfoSection({
               <span className="font-medium font-light">Booking:</span> {contact}
             </p>
           )}
-          <button
-          onClick={onClick}
-          className="border border-black px-6 py-3 text-sm uppercase tracking-wider hover:bg-black hover:text-white transition-colors duration-200"
-        >
-          {buttonLabel}
-        </button>
+          {!hideSecondaryButton && (
+            <button
+              onClick={onClick}
+              className="border border-black px-6 py-3 text-sm uppercase tracking-wider hover:bg-black hover:text-white transition-colors duration-200"
+            >
+              {buttonLabel}
+            </button>
+          )}
         </div>
         {imageUrl && (
           <div>
