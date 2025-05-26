@@ -139,7 +139,7 @@ export default function Home() {
         <>
           <Header hideMenu={hideMainMenu} />
           <HeroBanner
-            backgroundImage="/hero-pool.jpg"
+            backgroundImage="/hero-pool.webp"
             title="Eightfold Urban Resort"
             subtitle="A Luxurious Retreat near Angkor Wat"
           />
