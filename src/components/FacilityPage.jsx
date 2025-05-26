@@ -90,7 +90,11 @@ export default function FacilityPage({
     <>
       <Header />
 
-      <HeroBanner backgroundImage={heroImage} title={title} subtitle={subtitle} />
+      <HeroBanner
+        backgroundImage={heroImage}
+        title={title}
+        subtitle={subtitle}
+      />
 
       {extraTopElement}
 

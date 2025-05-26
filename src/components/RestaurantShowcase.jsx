@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 
-export default function RestaurantShowcase({ category = 'Restaurant', propertyId }) {
+export default function RestaurantShowcase({ category = 'Restaurant', propertyId, excludeName = '' }) {
   const [restaurants, setRestaurants] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('Restaurant');
   const scrollContainerRef = useRef(null);
@@ -26,7 +26,9 @@ export default function RestaurantShowcase({ category = 'Restaurant', propertyId
   return (
     <section className="pt-4 px-4 md:px-10 bg-white">
       <div className="flex overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
-        {restaurants.map((res, idx) => (
+        {restaurants
+          .filter(res => res.name.toLowerCase() !== excludeName.toLowerCase())
+          .map((res, idx) => (
           <div key={idx} className="flex-none w-[90vw] sm:w-[400px] shrink-0 space-y-4">
             <img
               src={res.photos?.[0]}

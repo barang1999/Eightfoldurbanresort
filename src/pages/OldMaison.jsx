@@ -5,6 +5,7 @@ export default function TheCitadelPage() {
     <RestaurantPage
       name="Old Maison"
       propertyId="6803cba3dadf9a0d829427fe"
+      excludeName="Old Maison"
     />
   );
 }

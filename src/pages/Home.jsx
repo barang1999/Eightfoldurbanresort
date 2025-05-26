@@ -302,10 +302,13 @@ export default function Home() {
           {showScrollTop && (
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="fixed bottom-6 right-6 z-50 bg-white/90 hover:bg-white text-[#8a6b41] p-3 rounded-full shadow-md transition-all duration-300"
+              className="fixed bottom-20 right-1 md:right-5 z-50 p-2 rounded-full transition-all duration-300
+                bg-white/90 text-[#8a6b41] shadow-md hover:bg-white
+                md:p-3 md:bg-white md:shadow-md md:block
+                sm:p-1 sm:bg-transparent sm:shadow-none sm:text-[#8a6b41]"
               aria-label="Scroll to top"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
               </svg>
             </button>

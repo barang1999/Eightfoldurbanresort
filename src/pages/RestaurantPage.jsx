@@ -107,7 +107,7 @@ export default function RestaurantPage({ name, propertyId }) {
       <div className="mt-auto">
         <section className="bg-white py-16 px-4 md:px-10">
           <h2 className="text-2xl text-center font-light mb-4">More Dining Options</h2>
-          <RestaurantShowcase propertyId="6803cba3dadf9a0d829427fe" />
+          <RestaurantShowcase propertyId="6803cba3dadf9a0d829427fe" excludeName={name} />
         </section>
       </div>
       
