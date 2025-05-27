@@ -228,11 +228,12 @@ const [loading, setLoading] = useState(true);
     }
   };
 
+
   const isFormValid =
     fullName.trim() !== "" &&
     phone.trim() !== "" &&
     email.trim() !== "" &&
-    transportType !== "" &&
+    selectedOption &&
     date &&
     time;
 
