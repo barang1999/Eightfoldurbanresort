@@ -176,7 +176,7 @@ const DesktopUserDropdown = ({ user, setIsModalOpen, setIsDropdownOpen }) => {
               signOut(auth)
                 .then(() => {
                   setIsDropdownOpen(false);
-                  navigate("/");
+                  window.location.reload();
                 })
                 .catch((error) => {
                   console.error("Logout error:", error);
