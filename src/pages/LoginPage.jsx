@@ -24,22 +24,23 @@ export default function LoginPage() {
     try {
       await signInWithEmail(email, password);
 
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const idToken = await user.getIdToken();
-          const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ idToken }),
-          });
+      const user = auth.currentUser;
 
-          const { customToken } = await res.json();
-          const encodedToken = encodeURIComponent(customToken);
+      if (user) {
+        const idToken = await user.getIdToken();
+        const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ idToken }),
+        });
 
-          // Immediately redirect
-          window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${encodedToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
-        }
-      });
+        const { customToken } = await res.json();
+        const encodedToken = encodeURIComponent(customToken);
+
+        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${encodedToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+      } else {
+        throw new Error("User not authenticated");
+      }
     } catch (err) {
       console.error("Login error", err);
       if (err.code === 'auth/invalid-credential') {
