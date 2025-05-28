@@ -1,8 +1,10 @@
 import { useState, useRef } from 'react';
 import TourDetailModal from './TourDetailModal';
+import TourBookingModal from './TourBookingModal';
 
 export default function TourShowcase({ tours = [], title }) {
   const [selectedTour, setSelectedTour] = useState(null);
+  const [bookingTour, setBookingTour] = useState(null);
   const scrollContainerRef = useRef(null);
 
   const tagLabelMap = {
@@ -64,12 +66,18 @@ export default function TourShowcase({ tours = [], title }) {
             <p className="text-sm text-gray-700 font-light line-clamp-3">{tour.description}</p>
             <div className="text-sm text-gray-500 mt-2">Price From: ${tour.price}</div>
             {tour.duration && <div className="text-sm text-gray-500">Duration: {tour.duration}</div>}
-            <div>
+            <div className="flex gap-3 mt-1">
+              <button
+                onClick={() => setBookingTour(tour)}
+                className="px-4 py-2 bg-black text-white text-sm hover:bg-white hover:text-black border border-black transition"
+              >
+                Book this tour
+              </button>
               <button
                 onClick={() => setSelectedTour(tour)}
-                className="inline-block px-4 py-2 mt-1 bg-black text-white text-sm hover:bg-white hover:text-black border hover:border-black transition"
+                className="text-sm text-[#0a2540] underline underline-offset-2 hover:text-black transition flex items-center gap-1"
               >
-                View details
+                View details →
               </button>
             </div>
           </div>
@@ -101,6 +109,13 @@ export default function TourShowcase({ tours = [], title }) {
         <TourDetailModal
           tour={selectedTour}
           onClose={() => setSelectedTour(null)}
+        />
+      )}
+      {bookingTour && (
+        <TourBookingModal
+          open={!!bookingTour}
+          tour={bookingTour}
+          onClose={() => setBookingTour(null)}
         />
       )}
     </section>

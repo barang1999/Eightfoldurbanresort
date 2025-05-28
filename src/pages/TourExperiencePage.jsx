@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import HeroBanner from "../components/HeroBanner";
@@ -71,7 +72,15 @@ export default function TourExperiencePage() {
         subtitle="Discover our curated journeys and cultural encounters."
         backgroundImage="/angkorwat2.jpg"
       />
-      {/* Desktop Booking Box */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-40px] mb-4"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
+      {/* Desktop Booking Box 
       <div className="hidden md:block">
         <BookingSearchBox
           selectedDates={selectedDates}
@@ -100,7 +109,9 @@ export default function TourExperiencePage() {
     setSelectedRate={setSelectedRate}
   />
 
-  <MobileStickyCTA onClick={() => setShowRates(true)} />
+  <MobileStickyCTA onClick={() => setShowRates(true)} /> 
+
+  */}
   
       <main className="w-full px-0 md:px-8 xl:px-12 py-12 max-w-none">
         <h2 className="text-2xl font-light text-[#4a3c2f] text-center mb-10">

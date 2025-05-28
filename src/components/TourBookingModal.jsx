@@ -238,7 +238,7 @@ const [loading, setLoading] = useState(true);
     time;
 
   return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-center sm:items-start sm:pt-10">
+    <div className="fixed inset-0 bg-black/40 z-50 flex justify-center items-center sm:items-start sm:pt-4">
       <motion.div
         ref={containerRef}
         initial={{ opacity: 0, y: 40 }}
