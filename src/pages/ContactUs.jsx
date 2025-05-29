@@ -26,6 +26,7 @@ export default function ContactUsPage() {
 
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   useEffect(() => {
     const apiURL = import.meta.env.VITE_ADMIN_API_URL || "http://localhost:7071";
@@ -113,6 +114,12 @@ export default function ContactUsPage() {
               className="space-y-4"
               onSubmit={async (e) => {
                 e.preventDefault();
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(formData.email)) {
+                  setEmailError(true);
+                  return;
+                }
+                setEmailError(false);
                 setIsSubmitting(true);
                 try {
                   const response = await fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/contact-message`, {
@@ -147,10 +154,13 @@ export default function ContactUsPage() {
               <input
                 type="email"
                 placeholder="Your Email"
-                className="w-full border border-gray-300 px-4 py-2 rounded"
+                className={`w-full border px-4 py-2 rounded ${emailError ? 'border-red-500' : 'border-gray-300'}`}
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
+              {emailError && (
+                <p className="text-red-500 text-sm mt-1">Please enter a valid email address.</p>
+              )}
               <textarea
                 placeholder="Your Message"
                 className="w-full border border-gray-300 px-4 py-2 rounded h-32"
@@ -161,7 +171,7 @@ export default function ContactUsPage() {
                 <button
                   type="submit"
                   className="bg-[#8a6b41] hover:bg-[#7a5f35] text-white text-lg font-medium px-10 py-3 rounded-md transition duration-300 flex items-center justify-center gap-2 disabled:opacity-60"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !formData.name || !formData.email || !formData.message}
                 >
                   {isSubmitting ? (
                     <>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import Header from './Header';
 import HeroBanner from './HeroBanner';
 import BookingSearchBox from './BookingSearchBox';
@@ -7,6 +8,7 @@ import MobileStickyCTA from './MobileStickyCTA';
 import InfoModal from './InfoModal';
 import Footer from './Footer';
 import FacilityInfoSection from './FacilityInfoSection';
+import { ChevronDown } from "lucide-react";
 
 export default function FacilityPage({
   title,
@@ -95,8 +97,18 @@ export default function FacilityPage({
         title={title}
         subtitle={subtitle}
       />
+       <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-40px] mb-4"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
 
       {extraTopElement}
+
+      {/* Mobile booking search box 
 
       <div className="hidden md:block">
         <BookingSearchBox
@@ -127,7 +139,9 @@ export default function FacilityPage({
 
       <MobileStickyCTA onClick={() => setShowRates(true)} />
      
+        */}
 
+        
 
       <section className="bg-white text-center px-6 py-20">
         <div className="max-w-screen-md mx-auto space-y-6">

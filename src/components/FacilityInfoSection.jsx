@@ -1,3 +1,4 @@
+import React from 'react';
 // src/components/FacilityInfoSection.jsx
 export default function FacilityInfoSection({
   hours = '',
@@ -13,14 +14,19 @@ export default function FacilityInfoSection({
       <div className="max-w-screen-md mx-auto flex flex-col-reverse md:grid md:grid-cols-2 gap-10 items-center">
         <div className="text-center md:text-left">
           {hours && (
-            <div className="mb-2 text-gray-800 font-light text-base whitespace-pre-line">
-              
+            <div className="mb-2 mt-5 text-gray-800 font-light text-base whitespace-pre-line">
               {Array.isArray(hours) ? (
-                hours.map((line, idx) => (
-                  <p key={idx} className="text-gray-800 text-base leading-relaxed">
-                    {line}
-                  </p>
-                ))
+                <div className="grid grid-cols-[max-content_auto] gap-x-2 gap-y-1 leading-relaxed">
+                  {hours.map((line, idx) => {
+                    const [day, time] = line.split(' : ');
+                    return (
+                      <React.Fragment key={idx}>
+                        <div className="min-w-[50px] text-right pr-2 font-medium">{day}</div>
+                        <div>: {time}</div>
+                      </React.Fragment>
+                    );
+                  })}
+                </div>
               ) : (
                 <pre className="whitespace-pre-line">{hours}</pre>
               )}

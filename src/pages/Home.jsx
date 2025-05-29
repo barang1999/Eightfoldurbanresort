@@ -150,7 +150,7 @@ export default function Home() {
           <HeroBanner
             backgroundImage="/hero-pool.webp"
             title="Eightfold Urban Resort"
-            subtitle="A Serene Escape, Elevated by Hospitality"
+            subtitle="By Eightfold Hospitality Group" 
           />
           <div className="hidden md:block">
             <BookingSearchBox
@@ -245,13 +245,13 @@ export default function Home() {
               {
                 title: "Spa",
                 description: "Our spa suites offer a tranquil escape after a day at Angkor. Rejuvenate with traditional Khmer massages, soothing aromatherapy, and revitalizing herbal compress treatments — all thoughtfully crafted to restore balance and wellbeing.",
-                image: "/spa5.jpg",
+                image: "/spa5.webp",
                 buttonText: "Discover More"
               },
               {
                 title: "Eightfold Swimming Pool",
                 description: "Our tranquil pool area invites you to relax and refresh under the Siem Reap sun. Choose between our lush poolside sun loungers or elevated upper-deck loungers for a quiet escape. Enjoy full poolside service as you unwind, sip, and soak in the serene atmosphere of Eightfold Urban Resort.",
-                image: "/public/pool1.jpg",
+                image: "/pool1.webp",
                 buttonText: "Discover More"
               }
             ]}

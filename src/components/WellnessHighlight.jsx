@@ -21,7 +21,7 @@ export default function WellnessHighlight({ items = [], onDiscover }) {
   };
 
   return (
-    <section className="bg-[#f9f7f3] py-12 px-6">
+    <section className="bg-[#f9f7f3] pt-12 pb-24 px-6">
       <div className="max-w-screen-xl mx-auto relative">
         <div className="relative h-full overflow-hidden min-h-[600px] md:min-h-[300px]">
           <div

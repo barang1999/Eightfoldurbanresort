@@ -7,6 +7,7 @@ import MobileBookingModal from '../components/MobileBookingModal';
 import MobileStickyCTA from '../components/MobileStickyCTA';
 import InfoModal from '../components/InfoModal';
 import Footer from '../components/Footer';
+import { ChevronDown } from "lucide-react";
 
 export default function SpaPage() {
   const [selectedDates, setSelectedDates] = useState({
@@ -63,8 +64,16 @@ export default function SpaPage() {
         title="Spa & Wellness"
         subtitle="Rejuvenate your body and mind in our serene sanctuary"
       />
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-40px] mb-4"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
 
-      {/* Desktop Booking Box */}
+      {/* Desktop Booking Box 
       <div className="hidden md:block">
         <BookingSearchBox
           selectedDates={selectedDates}
@@ -81,7 +90,7 @@ export default function SpaPage() {
         />
       </div>
 
-      {/* Mobile Booking Modal */}
+      
       <MobileBookingModal
         showRates={showRates}
         setShowRates={setShowRates}
@@ -95,9 +104,9 @@ export default function SpaPage() {
         setSelectedRate={setSelectedRate}
       />
 
-      {/* Mobile Sticky CTA */}
+     
       <MobileStickyCTA onClick={() => setShowRates(true)} />
-
+    
       {/* Content Section */}
       <section className="bg-white text-center px-6 py-20">
         <div className="max-w-screen-md mx-auto space-y-6">
