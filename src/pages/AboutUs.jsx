@@ -105,7 +105,7 @@ export default function AboutUsPage() {
       </section>
 
       <section className="bg-[#fdfaf6] px-6 py-20 text-center">
-        <h2 className="text-3xl font-serif text-[#8a6b41] mb-4">A Space Designed to Soothe</h2>
+        <h2 className="text-3xl font-serif text-[#8a6b41] mb-4">Design That Inspires Serenity</h2>
         <div className="max-w-3xl text-base font-light mx-auto text-gray-700 space-y-4">
           <p>
             At Eightfold Urban Resort, design is more than architecture—it is a philosophy of balance. Every space has been thoughtfully crafted to immerse our guests in a sense of peace and natural beauty. From the moment you step into our resort, you're surrounded by lush tropical greenery, calming water features, and modern interiors that echo traditional Cambodian aesthetics.
