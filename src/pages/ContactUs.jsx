@@ -8,6 +8,7 @@ import MobileStickyCTA from '../components/MobileStickyCTA';
 import Footer from '../components/Footer';
 import MapEmbed from '../components/MapEmbed';
 import SupportButton from '../components/SupportButton';
+import { ChevronDown } from "lucide-react";
 
 export default function ContactUsPage() {
   const PROPERTY_ID = import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID;
@@ -56,7 +57,16 @@ export default function ContactUsPage() {
         subtitle="We’re here to assist you with your stay at Eightfold Urban Resort"
       />
 
-      {/* Desktop Booking Box */}
+       <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-120px] mb-40 md:mt-[-40px] md:mb-8"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
+
+      {/* Desktop Booking Box
             <div className="hidden md:block">
               <BookingSearchBox
                 selectedDates={selectedDates}
@@ -73,7 +83,7 @@ export default function ContactUsPage() {
               />
             </div>
       
-            {/* Mobile Booking Modal */}
+            {/* Mobile Booking Modal
             <MobileBookingModal
               showRates={showRates}
               setShowRates={setShowRates}
@@ -87,8 +97,10 @@ export default function ContactUsPage() {
               setSelectedRate={setSelectedRate}
             />
       
-            {/* Mobile Sticky CTA */}
+            {/* Mobile Sticky CTA 
             <MobileStickyCTA onClick={() => setShowRates(true)} />
+
+            */}
 
       <section className="bg-white px-6 py-20">
         <div className="max-w-screen-lg mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 text-gray-700 text-base leading-relaxed font-light">
@@ -197,7 +209,7 @@ export default function ContactUsPage() {
       
     <SupportButton
           propertyId={PROPERTY_ID}
-          className="fixed bottom-24 right-0 md:bottom-12 md:right-6 z-40"
+          className="fixed bottom-4 right-0 md:bottom-12 md:right-6 z-40"
         />
 
     </motion.div>

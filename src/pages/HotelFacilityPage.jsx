@@ -6,6 +6,7 @@ import HotelFacilitySection from '../components/HotelFacilitySection';
 import BookingSearchBox from '../components/BookingSearchBox';
 import MobileBookingModal from '../components/MobileBookingModal';
 import MobileStickyCTA from '../components/MobileStickyCTA';
+import { ChevronDown } from "lucide-react";
 
 const HotelFacilityPage = () => {
   const propertyId = import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID;
@@ -33,7 +34,16 @@ const HotelFacilityPage = () => {
         title="Hotel Facilities"
         subtitle="Explore all services and amenities available to enhance your stay."
       />
-      {/* Desktop Booking Box */}
+
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-120px] mb-40 md:mt-[-40px] md:mb-8"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
+      {/* Desktop Booking Box 
       <div className="hidden md:block">
         <BookingSearchBox
           selectedDates={selectedDates}
@@ -50,7 +60,7 @@ const HotelFacilityPage = () => {
         />
       </div>
 
-      {/* Mobile Booking Modal */}
+      {/* Mobile Booking Modal 
       <MobileBookingModal
         showRates={showRates}
         setShowRates={setShowRates}
@@ -64,9 +74,9 @@ const HotelFacilityPage = () => {
         setSelectedRate={setSelectedRate}
       />
 
-      {/* Mobile Sticky CTA */}
+      {/* Mobile Sticky CTA 
       <MobileStickyCTA onClick={() => setShowRates(true)} />
-
+      */}
       <div className="py-16 px-4">
         <HotelFacilitySection propertyId={propertyId} />
       </div>

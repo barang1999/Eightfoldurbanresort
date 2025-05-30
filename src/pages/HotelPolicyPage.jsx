@@ -7,6 +7,7 @@ import HotelPolicySection from '../components/HotelPolicySection';
 import BookingSearchBox from '../components/BookingSearchBox';
 import MobileBookingModal from '../components/MobileBookingModal';
 import MobileStickyCTA from '../components/MobileStickyCTA';
+import { ChevronDown } from "lucide-react";
 
 const HotelPolicyPage = () => {
   const propertyId = import.meta.env.VITE_EIGHTFOLD_PROPERTY_ID;
@@ -34,7 +35,16 @@ const HotelPolicyPage = () => {
         title="Hotel Policies"
         subtitle="Review our check-in/out times, deposit requirements, cancellation rules, and guest policies."
       />
-      {/* Desktop Booking Box */}
+
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
+        className="flex justify-center mt-[-120px] mb-40 md:mt-[-40px] md:mb-8"
+      >
+        <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
+      </motion.div>
+      {/* Desktop Booking Box 
       <div className="hidden md:block">
         <BookingSearchBox
           selectedDates={selectedDates}
@@ -51,7 +61,7 @@ const HotelPolicyPage = () => {
         />
       </div>
 
-      {/* Mobile Booking Modal */}
+      {/* Mobile Booking Modal 
       <MobileBookingModal
         showRates={showRates}
         setShowRates={setShowRates}
@@ -64,7 +74,7 @@ const HotelPolicyPage = () => {
         selectedRate={selectedRate}
         setSelectedRate={setSelectedRate}
       />
-        {/* Mobile Sticky CTA */}
+        {/* Mobile Sticky CTA 
             <MobileStickyCTA onClick={() => setShowRates(true)} />
 
        {/* Policy Section */}

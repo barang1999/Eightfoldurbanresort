@@ -76,7 +76,7 @@ export default function TourExperiencePage() {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 1, repeat: Infinity, repeatType: "reverse" }}
-        className="flex justify-center mt-[-40px] mb-4"
+        className="flex justify-center mt-[-120px] mb-40 md:mt-[-40px] md:mb-8"
       >
         <ChevronDown className="w-6 h-6 text-white animate-bounce-slow" />
       </motion.div>
