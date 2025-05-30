@@ -150,7 +150,7 @@ export default function Home() {
           <HeroBanner
             backgroundImage="/hero-pool.webp"
             title="Eightfold Urban Resort"
-            subtitle="By Eightfold Hospitality Group" 
+            subtitle="by Eightfold Hospitality Group" 
           />
           <div className="hidden md:block">
             <BookingSearchBox
