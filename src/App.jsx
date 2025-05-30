@@ -15,6 +15,7 @@ import GalleryPage from './pages/GalleryPage';
 import ContactUsPage from './pages/ContactUs';
 import HotelPolicyPage from './pages/HotelPolicyPage';
 import HotelFacilityPage from './pages/HotelFacilityPage';
+import PoolPage from './pages/PoolPage';
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/contact" element={<Layout><ContactUsPage /></Layout>} />
         <Route path="/policies" element={<Layout><HotelPolicyPage /></Layout>} />
         <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
+        <Route path="/pool" element={<Layout><PoolPage /></Layout>} />
       </Routes>
     </Router>
   );
