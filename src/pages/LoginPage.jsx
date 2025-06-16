@@ -37,7 +37,7 @@ export default function LoginPage() {
         const { customToken } = await res.json();
         const encodedToken = encodeURIComponent(customToken);
 
-        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${encodedToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${encodedToken}&redirectBack=https://booking.eightfoldurban.com/`;
       } else {
         throw new Error("User not authenticated");
       }
