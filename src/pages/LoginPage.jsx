@@ -74,7 +74,7 @@ export default function LoginPage() {
 
         const { customToken } = await res.json();
         console.log("[GoogleLogin] Custom token received:", customToken);
-        window.location.href = `https://eightfoldbookingchannel.vercel.app/token-login?token=${customToken}&redirectBack=https://eightfoldurbanresort.vercel.app/`;
+        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${customToken}&redirectBack=https://booking.eightfoldurban.com/`;
       } catch (popupError) {
         console.error("[GoogleLogin] Popup failed:", popupError);
       }
