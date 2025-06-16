@@ -37,7 +37,7 @@ export default function LoginPage() {
         const { customToken } = await res.json();
         const encodedToken = encodeURIComponent(customToken);
 
-        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${encodedToken}&redirectBack=https://booking.eightfoldurban.com/`;
+        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${encodedToken}&redirectBack=https://eightfoldurban.com/`;
       } else {
         throw new Error("User not authenticated");
       }
@@ -74,7 +74,7 @@ export default function LoginPage() {
 
         const { customToken } = await res.json();
         console.log("[GoogleLogin] Custom token received:", customToken);
-        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${customToken}&redirectBack=https://booking.eightfoldurban.com/`;
+        window.location.href = `https://booking.eightfoldurban.com/token-login?token=${customToken}&redirectBack=https://eightfoldurban.com/`;
       } catch (popupError) {
         console.error("[GoogleLogin] Popup failed:", popupError);
       }
