@@ -25,7 +25,7 @@ export default function RestaurantShowcase({ category = 'Restaurant', propertyId
 
   return (
     <section className="pt-4 px-4 md:px-10 bg-white">
-      <div className="flex overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
+      <div className="flex justify-center overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
         {restaurants
           .filter(res => res.name.toLowerCase() !== excludeName.toLowerCase())
           .map((res, idx) => (

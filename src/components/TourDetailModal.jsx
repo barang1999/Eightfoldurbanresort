@@ -177,7 +177,7 @@ export default function TourDetailModal({ tour, onClose }) {
                       if (typeof price === "number" && price > 0) {
                         return (
                           <li key={type} className="capitalize">
-                            {label}: ${price}
+                            {label}: USD {price}
                           </li>
                         );
                       }

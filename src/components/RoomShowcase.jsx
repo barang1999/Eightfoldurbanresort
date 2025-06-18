@@ -69,7 +69,7 @@ export default function RoomShowcase({ category, propertyId }) {
       </div>
       <div
         ref={scrollContainerRef}
-        className="flex overflow-x-auto space-x-6 pb-4 scroll-smooth snap-x snap-mandatory"
+        className="flex justify-center overflow-x-auto space-x-6 pb-4 scroll-smooth snap-x snap-mandatory"
       >
         {rooms.map((room, idx) => (
           <div key={idx} className="flex-none w-[400px] shrink-0 space-y-4">

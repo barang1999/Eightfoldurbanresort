@@ -289,7 +289,7 @@ const [loading, setLoading] = useState(true);
                                 `cursor-pointer px-4 py-2 ${active ? "bg-gray-100" : ""}`
                               }
                             >
-                              {opt.label} – ${opt.price}
+                              {opt.label} – USD {opt.price}
                             </Listbox.Option>
                           ))}
                         </Listbox.Options>
@@ -492,14 +492,14 @@ const [loading, setLoading] = useState(true);
         <div className="border-t pt-4 mt-4 text-sm">
           <div className="flex justify-between mb-1">
             <span>Tour ({selectedOption?.label || "N/A"})</span>
-            <span>${selectedOption?.price || 0}</span>
+            <span>USD {selectedOption?.price || 0}</span>
           </div>
 
           {addSunrise && (
             <div className="flex justify-between mb-1">
               <span>Add-on: Sunrise</span>
               <span>
-                ${
+                USD {
                   selectedOption?.value?.includes("tukTuk")
                     ? tukTuk.extraSunrise || 0
                     : selectedOption?.value === "car"
@@ -516,7 +516,7 @@ const [loading, setLoading] = useState(true);
             <div className="flex justify-between mb-1">
               <span>Add-on: Backtown</span>
               <span>
-                ${
+                USD {
                   selectedOption?.value?.includes("tukTuk")
                     ? tukTuk.extraBackTown || 0
                     : selectedOption?.value === "car"
@@ -531,17 +531,17 @@ const [loading, setLoading] = useState(true);
 
           <div className="flex justify-between font-medium mt-2">
             <span>Subtotal</span>
-            <span>${total}</span>
+            <span>USD {total}</span>
           </div>
 
           <div className="flex justify-between mt-1">
             <span>VAT (10%)</span>
-            <span>${(total * 0.1).toFixed(2)}</span>
+            <span>USD {(total * 0.1).toFixed(2)}</span>
           </div>
 
           <div className="flex justify-between font-semibold text-lg mt-2 border-t pt-2">
             <span>Total</span>
-            <span>${(total * 1.1).toFixed(2)}</span>
+            <span>USD {(total * 1.1).toFixed(2)}</span>
           </div>
         </div>
 

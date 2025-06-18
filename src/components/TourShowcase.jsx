@@ -33,7 +33,7 @@ export default function TourShowcase({ tours = [], title }) {
       {tours.length === 0 && (
         <p className="text-center text-gray-400 py-8 italic">No tours available in this category.</p>
       )}
-      <div className="flex overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
+      <div className="flex justify-center overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
         {tours.map((tour, idx) => (
           <div key={idx} className="flex-none w-[90vw] sm:w-[400px] shrink-0 space-y-4">
             {tour.imageUrls?.[0] && (
@@ -64,7 +64,7 @@ export default function TourShowcase({ tours = [], title }) {
               </div>
             )}
             <p className="text-sm text-gray-700 font-light line-clamp-3">{tour.description}</p>
-            <div className="text-sm text-gray-500 mt-2">Price From: ${tour.price}</div>
+            <div className="text-sm text-gray-500 mt-2">Price From: USD {tour.price}</div>
             {tour.duration && <div className="text-sm text-gray-500">Duration: {tour.duration}</div>}
             <div className="flex gap-3 mt-1">
               <button
