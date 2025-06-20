@@ -6,6 +6,7 @@ export default function TourShowcase({ tours = [], title }) {
   const [selectedTour, setSelectedTour] = useState(null);
   const [bookingTour, setBookingTour] = useState(null);
   const scrollContainerRef = useRef(null);
+  console.log("TourShowcase rendered. Tours count:", tours.length);
 
   const tagLabelMap = {
     fullday: "Full Day",
@@ -33,14 +34,16 @@ export default function TourShowcase({ tours = [], title }) {
       {tours.length === 0 && (
         <p className="text-center text-gray-400 py-8 italic">No tours available in this category.</p>
       )}
-      <div className="flex justify-center overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
-        {tours.map((tour, idx) => (
-          <div key={idx} className="flex-none w-[90vw] sm:w-[400px] shrink-0 space-y-4">
+      <div className="flex overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory pl-4 pr-4 sm:pl-6 sm:pr-6" ref={scrollContainerRef}>
+        {tours.map((tour, idx) => {
+          console.log("Rendering tour:", tour.category || tour.title || "Untitled Tour");
+          return (
+          <div key={idx} className="flex-none w-[320px] sm:w-[400px] shrink-0 space-y-4 min-h-[500px]">
             {tour.imageUrls?.[0] && (
               <img
                 src={tour.imageUrls[0]}
                 alt={tour.category}
-                className="w-full h-[200px] sm:h-[250px] object-cover rounded transition-transform duration-300 hover:scale-105"
+                className="w-full h-[240px] object-cover rounded transition-transform duration-300 hover:scale-105"
               />
             )}
             <h3 className="text-xl font-light uppercase">{tour.category}</h3>
@@ -81,7 +84,8 @@ export default function TourShowcase({ tours = [], title }) {
               </button>
             </div>
           </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-center gap-4 mt-[-10px] sm:mt-2">
