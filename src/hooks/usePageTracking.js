@@ -1,6 +1,11 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getOrCreateSession } from '../utils/useSession';
+import { io } from 'socket.io-client';
+
+const socket = io(import.meta.env.VITE_ADMIN_API_URL, {
+  transports: ['websocket'],
+});
 
 export const usePageTracking = () => {
   const location = useLocation();
@@ -27,6 +32,12 @@ export const usePageTracking = () => {
             engagementTime,
           }),
         });
+
+        socket.emit('user_connected', {
+          sessionId,
+          propertyId,
+          path: location.pathname,
+        });
       } catch (err) {
         console.error('❌ Tracking failed:', err);
       }
@@ -52,6 +63,12 @@ export const usePageTracking = () => {
           const beaconUrl = `${import.meta.env.VITE_ADMIN_API_URL}/api/analytics/update-engagement`;
           const success = navigator.sendBeacon(beaconUrl, formData);
           console.log('📡 Beacon sent (FormData)?', success);
+
+          socket.emit('user_disconnected', {
+            sessionId,
+            propertyId,
+            path: location.pathname,
+          });
         } else {
           fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/analytics/update-engagement`, {
             method: 'POST',
@@ -65,6 +82,12 @@ export const usePageTracking = () => {
             keepalive: true,
           }).then(res => {
             console.log('📡 Fallback fetch sent:', res.status);
+
+            socket.emit('user_disconnected', {
+              sessionId,
+              propertyId,
+              path: location.pathname,
+            });
           }).catch(err => {
             console.error('❌ Fallback fetch failed:', err);
           });
