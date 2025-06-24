@@ -25,11 +25,14 @@ export default function RestaurantShowcase({ category = 'Restaurant', propertyId
 
   return (
     <section className="pt-4 px-4 md:px-10 bg-white">
-      <div className="flex justify-center overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory px-2 sm:px-0" ref={scrollContainerRef}>
+      <div
+        className="flex overflow-x-auto space-x-4 sm:space-x-6 pb-6 scroll-smooth snap-x snap-mandatory pl-4 pr-4 sm:pl-6 sm:pr-6"
+        ref={scrollContainerRef}
+      >
         {restaurants
           .filter(res => res.name.toLowerCase() !== excludeName.toLowerCase())
           .map((res, idx) => (
-          <div key={idx} className="flex-none w-[90vw] sm:w-[400px] shrink-0 space-y-4">
+          <div key={idx} className="flex-none w-[320px] sm:w-[400px] shrink-0 space-y-4 snap-start">
             <img
               src={res.photos?.[0]}
               alt={res.name}

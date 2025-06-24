@@ -261,7 +261,7 @@ export default function Home() {
             }}
           />
 
-          <section id="dining" className="scroll-mt-32 py-10 px-1 md:px-10 bg-white">
+          <section id="dining" className="scroll-mt-32 py-10 px-0 sm:px-4 md:px-10 bg-white">
             <h2 className="text-2xl font-light mb-4 px-4 md:px-10">Restaurants & Bars</h2>
             <RestaurantShowcase propertyId="6803cba3dadf9a0d829427fe" />
           </section>
