@@ -18,33 +18,42 @@ import HotelPolicyPage from './pages/HotelPolicyPage';
 import HotelFacilityPage from './pages/HotelFacilityPage';
 import PoolPage from './pages/PoolPage';
 
+import { usePageTracking } from './hooks/usePageTracking';
+
+const TrackingWrapper = ({ children }) => {
+  usePageTracking();
+  return children;
+};
+
 export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/" element={<Layout><Home /></Layout>} />
-        <Route path="/spa" element={<Layout><SpaPage /></Layout>} />
-        <Route path="/sankya" element={<Layout><SankyaPage /></Layout>} />
-        <Route path="/oldmaison" element={<Layout><OldMaison /></Layout>} />
-        <Route
-          path="/sankyacafe"
-          element={
-            <Layout>
-              <RestaurantPage name="Sankya Cafe" propertyId="6803cba3dadf9a0d829427fe" />
-            </Layout>
-          }
-        />
-        <Route path="/tours" element={<Layout><TourExperiencePage /></Layout>} />
-        <Route path="/about" element={<Layout><AboutUsPage /></Layout>} />
-        <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
-        <Route path="/contact" element={<Layout><ContactUsPage /></Layout>} />
-        <Route path="/policies" element={<Layout><HotelPolicyPage /></Layout>} />
-        <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
-        <Route path="/pool" element={<Layout><PoolPage /></Layout>} />
-      </Routes>
+      <TrackingWrapper>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/" element={<Layout><Home /></Layout>} />
+          <Route path="/spa" element={<Layout><SpaPage /></Layout>} />
+          <Route path="/sankya" element={<Layout><SankyaPage /></Layout>} />
+          <Route path="/oldmaison" element={<Layout><OldMaison /></Layout>} />
+          <Route
+            path="/sankyacafe"
+            element={
+              <Layout>
+                <RestaurantPage name="Sankya Cafe" propertyId="6803cba3dadf9a0d829427fe" />
+              </Layout>
+            }
+          />
+          <Route path="/tours" element={<Layout><TourExperiencePage /></Layout>} />
+          <Route path="/about" element={<Layout><AboutUsPage /></Layout>} />
+          <Route path="/gallery" element={<Layout><GalleryPage /></Layout>} />
+          <Route path="/contact" element={<Layout><ContactUsPage /></Layout>} />
+          <Route path="/policies" element={<Layout><HotelPolicyPage /></Layout>} />
+          <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
+          <Route path="/pool" element={<Layout><PoolPage /></Layout>} />
+        </Routes>
+      </TrackingWrapper>
       <Analytics />
     </Router>
   );
