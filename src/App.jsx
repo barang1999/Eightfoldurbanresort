@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Home from './pages/Home';
 import SpaPage from './pages/SpaPage';
 import SankyaPage from './pages/SankyaPage';
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
         <Route path="/pool" element={<Layout><PoolPage /></Layout>} />
       </Routes>
+      <Analytics />
     </Router>
   );
 }
