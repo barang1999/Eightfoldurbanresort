@@ -10,6 +10,8 @@ export const usePageTracking = () => {
         const sessionId = localStorage.getItem('sessionId') || crypto.randomUUID();
         localStorage.setItem('sessionId', sessionId);
 
+        const propertyId = localStorage.getItem('propertyId') || import.meta.env.VITE_DEFAULT_PROPERTY_ID;
+
         await fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/analytics/track`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -17,6 +19,7 @@ export const usePageTracking = () => {
             path: location.pathname,
             referrer: document.referrer,
             sessionId,
+            propertyId,
           }),
         });
       } catch (err) {
