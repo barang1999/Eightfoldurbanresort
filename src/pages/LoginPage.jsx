@@ -28,7 +28,7 @@ export default function LoginPage() {
 
       if (user) {
         const idToken = await user.getIdToken();
-        const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
+        const res = await fetch("https://firebase-auth-server-production.up.railway.app/api/generate-custom-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idToken }),
@@ -66,7 +66,7 @@ export default function LoginPage() {
         console.log("[GoogleLogin] Sign-in result:", result);
         const idToken = await result.user.getIdToken();
 
-        const res = await fetch("https://firebase-auth-server-66v7.onrender.com/api/generate-custom-token", {
+        const res = await fetch("https://firebase-auth-server-production.up.railway.app/api/generate-custom-token", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idToken }),
