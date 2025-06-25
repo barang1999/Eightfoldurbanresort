@@ -43,7 +43,8 @@ export default function TourShowcase({ tours = [], title }) {
               <img
                 src={tour.imageUrls[0]}
                 alt={tour.category}
-                className="w-full h-[240px] object-cover rounded transition-transform duration-300 hover:scale-105"
+                className="w-full h-[240px] object-cover rounded transition-transform duration-300 hover:scale-105 cursor-pointer"
+                onClick={() => setSelectedTour(tour)}
               />
             )}
             <h3 className="text-xl font-light uppercase">{tour.category}</h3>

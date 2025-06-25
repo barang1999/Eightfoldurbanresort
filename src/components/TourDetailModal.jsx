@@ -1,4 +1,12 @@
 import React from 'react';
+import { Car, Bus, Bike } from "lucide-react";
+// Custom TukTuk SVG icon
+const TukTukIcon = () => (
+  <svg viewBox="0 0 496 496" width="16" height="16" stroke="currentColor" fill="none" strokeWidth="35" className="inline mr-1 text-gray-500">
+    <path d="M464,120h-16c-13.232,0-24,10.768-24,24v8h-15.16l-7.024-70.28c10.944,6.976,16.656,12.056,16.808,12.192l10.784-11.824C427.68,80.528,387.624,44.736,312,30.136V16c0-8.824-7.176-16-16-16h-96c-8.824,0-16,7.176-16,16v14.136C108.376,44.728,68.32,80.528,66.6,82.088l10.8,11.816c0.144-0.136,5.832-5.232,16.8-12.232L87.184,152H72v-8c0-13.232-10.768-24-24-24H32c-13.232,0-24,10.768-24,24v32c0,13.232,10.768,24,24,24h16c1.608,0,3.184-0.168,4.704-0.472l27.664,20.752L80,224v184h16v64c0,13.232,10.768,24,24,24h32c13.232,0,24-10.768,24-24v-64h8v32h16v-8h8v40c0,13.232,10.768,24,24,24h32c13.232,0,24-10.768,24-24v-40h8v8h16v-32h8v64c0,13.232,10.768,24,24,24h32c13.232,0,24-10.768,24-24v-64h16l-0.04-184.8l-0.296-2.96l27.632-20.72c1.52,0.312,3.096,0.48,4.704,0.48h16c13.232,0,24-10.768,24-24v-32C488,130.768,477.232,120,464,120z"/>
+    <path d="M384,161.68c0-1.416-0.08-2.832-0.232-4.232l-6.232-56.096C376.176,89.176,365.928,80,353.68,80H142.32c-12.248,0-22.504,9.176-23.856,21.352l-6.224,56.088c-0.16,1.408-0.24,2.824-0.24,4.24c0,21.136,17.184,38.32,38.32,38.32H248h97.68C366.816,200,384,182.816,384,161.68z"/>
+  </svg>
+);
 function parseDescription(description) {
   if (!description) return null;
   const lines = description.split('\n').filter(Boolean);
@@ -21,6 +29,7 @@ const tagLabelMap = {
 export default function TourDetailModal({ tour, onClose }) {
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
   const [isBooking, setIsBooking] = React.useState(false);
+  const [expandedType, setExpandedType] = React.useState(null);
   const containerRef = React.useRef(null);
   const { user } = useAuth();
 
@@ -162,26 +171,82 @@ export default function TourDetailModal({ tour, onClose }) {
               {tour.transportation?.allowChoice && tour.transportation?.availableTypes && (
                 <div>
                   <strong>Price:</strong>
-                  <ul className="list-disc ml-6 mt-1 text-gray-800 space-y-1">
-                    {tour.transportation.availableTypes.map((type) => {
+                  <ul className="space-y-1 mt-2 text-sm text-gray-700">
+                    {tour.transportation.availableTypes.map((type, index) => {
                       const key = type === "Tuk-Tuk" ? "tukTuk" : type.toLowerCase().replace(/[-\s]/g, '');
                       const label = type === "Tuk-Tuk" ? "Tuk-Tuk" : type;
-                      let price = tour.transportation?.[key]?.price;
+                      const transportData = tour.transportation?.[key];
+                      if (!transportData) return null;
 
-                      if (key === 'tukTuk') {
-                        const p1 = tour.transportation?.tukTuk?.price1to2;
-                        const p2 = tour.transportation?.tukTuk?.price3to4;
-                        price = typeof p1 === "number" && p1 > 0 ? p1 : typeof p2 === "number" && p2 > 0 ? p2 : null;
+                      let capacity = transportData.capacity;
+                      if (!capacity) {
+                        if (key === "car") capacity = "1–4 Pax";
+                        else if (key === "van") capacity = "1–8 Pax";
+                        else if (key === "tukTuk") capacity = "1–4 Pax";
                       }
 
-                      if (typeof price === "number" && price > 0) {
-                        return (
-                          <li key={type} className="capitalize">
-                            {label}: USD {price}
-                          </li>
-                        );
-                      }
-                      return null;
+                      const iconComponent = key === "tukTuk"
+                        ? <TukTukIcon />
+                        : key === "car"
+                        ? <Car size={16} className="inline mr-1 text-gray-500" />
+                        : <Bus size={16} className="inline mr-1 text-gray-500" />;
+
+                      return (
+                        <motion.li
+                          key={type}
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.3, delay: index * 0.1 }}
+                          className="flex flex-col items-start gap-1"
+                        >
+                          <div className="flex items-start gap-2">
+                            <span className="relative group">
+                              {key === "tukTuk" ? (
+                                <>
+                                  {iconComponent}
+                                  <div className="absolute left-5 top-0 z-10 w-40 p-1 bg-white border border-gray-300 rounded shadow-lg hidden group-hover:block">
+                                    <img
+                                      src="https://storage.camboticket.com/images/1534149837_5b7144cddd4bb_original.jpeg"
+                                      alt="Tuk Tuk"
+                                      className="w-full h-auto rounded"
+                                    />
+                                  </div>
+                                </>
+                              ) : (
+                                iconComponent
+                              )}
+                            </span>
+                            <span>
+                              <span className="font-medium">{label}</span>
+                              {key === "tukTuk" ? (
+                                <> (1–2 Pax): ${transportData.price1to2} (3–4 Pax): ${transportData.price3to4}</>
+                              ) : (
+                                <> ({capacity}): ${transportData.price}</>
+                              )}
+                              <button
+                                className="ml-2 text-xs text-blue-500"
+                                onClick={() => setExpandedType(expandedType === key ? null : key)}
+                              >
+                                {expandedType === key ? 'Hide Extras' : 'Show Extras'}
+                              </button>
+                            </span>
+                          </div>
+                          <AnimatePresence initial={false}>
+                            {expandedType === key && (
+                              <motion.ul
+                                initial={{ opacity: 0, height: 0 }}
+                                animate={{ opacity: 1, height: "auto" }}
+                                exit={{ opacity: 0, height: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                className="ml-6 mt-1 text-gray-600 text-xs list-disc overflow-hidden"
+                              >
+                                {transportData.extraSunrise && <li>+ Sunrise: ${transportData.extraSunrise}</li>}
+                                {transportData.extraBackTown && <li>+ Back to Town: ${transportData.extraBackTown}</li>}
+                              </motion.ul>
+                            )}
+                          </AnimatePresence>
+                        </motion.li>
+                      );
                     })}
                   </ul>
                 </div>
@@ -251,6 +316,7 @@ export default function TourDetailModal({ tour, onClose }) {
             </div>
           </div>
         </div>
+        {/*
         <div className="mt-4 pt-4 border-t border-gray-200 flex justify-center">
           <motion.button
             whileTap={{ scale: 0.96 }}
@@ -260,6 +326,7 @@ export default function TourDetailModal({ tour, onClose }) {
             Book this tour
           </motion.button>
         </div>
+        */}
       </motion.div>
       <AnimatePresence>
         {isBooking && (
