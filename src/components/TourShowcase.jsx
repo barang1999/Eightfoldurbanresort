@@ -71,12 +71,14 @@ export default function TourShowcase({ tours = [], title }) {
             <div className="text-sm text-gray-500 mt-2">Price From: USD {tour.price}</div>
             {tour.duration && <div className="text-sm text-gray-500">Duration: {tour.duration}</div>}
             <div className="flex gap-3 mt-1">
+              {/*
               <button
                 onClick={() => setBookingTour(tour)}
                 className="px-4 py-2 bg-black text-white text-sm hover:bg-white hover:text-black border border-black transition"
               >
                 Book this tour
               </button>
+              */}
               <button
                 onClick={() => setSelectedTour(tour)}
                 className="text-sm text-[#0a2540] underline underline-offset-2 hover:text-black transition flex items-center gap-1"
