@@ -9,6 +9,8 @@ import ScrollToTop from './components/ScrollToTop';
 import TourExperiencePage from './pages/TourExperiencePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import RestaurantPage from './pages/RestaurantPage';
 import Layout from './components/Layout';
 import AboutUsPage from './pages/AboutUs';
@@ -33,6 +35,8 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/" element={<Layout><Home /></Layout>} />
           <Route path="/spa" element={<Layout><SpaPage /></Layout>} />
           <Route path="/sankya" element={<Layout><SankyaPage /></Layout>} />
