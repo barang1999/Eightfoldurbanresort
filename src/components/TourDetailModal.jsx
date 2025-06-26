@@ -58,7 +58,7 @@ export default function TourDetailModal({ tour, onClose }) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: 100 }}
         transition={{ duration: 0.25, ease: 'easeOut' }}
-        className="bg-white w-full max-h-[var(--app-height)] overflow-y-auto flex flex-col relative p-6 rounded-none md:rounded-lg shadow-lg md:max-w-6xl mx-auto"
+        className="bg-white w-full max-h-[var(--app-height)] min-h-[90vh] overflow-y-auto flex flex-col relative p-6 rounded-none md:rounded-lg shadow-lg md:max-w-6xl mx-auto"
       >
         <div className="flex-1 overflow-y-auto">
           <button
@@ -223,12 +223,14 @@ export default function TourDetailModal({ tour, onClose }) {
                               ) : (
                                 <> ({capacity}): ${transportData.price}</>
                               )}
-                              <button
-                                className="ml-2 text-xs text-blue-500"
-                                onClick={() => setExpandedType(expandedType === key ? null : key)}
-                              >
-                                {expandedType === key ? 'Hide Extras' : 'Show Extras'}
-                              </button>
+                              {(transportData.extraSunrise || transportData.extraBackTown) && (
+                                <button
+                                  className="ml-2 text-xs text-blue-500"
+                                  onClick={() => setExpandedType(expandedType === key ? null : key)}
+                                >
+                                  {expandedType === key ? 'Hide Extras' : 'Show Extras'}
+                                </button>
+                              )}
                             </span>
                           </div>
                           <AnimatePresence initial={false}>
