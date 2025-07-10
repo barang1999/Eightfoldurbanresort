@@ -15,11 +15,11 @@ export const usePageTracking = () => {
 
     const trackVisit = async (engagementTime = 0) => {
       try {
-        const { sessionId } = getOrCreateSession();
+        const { sessionId, trackingId } = getOrCreateSession();
 
         const propertyId = localStorage.getItem('propertyId') || import.meta.env.VITE_DEFAULT_PROPERTY_ID;
 
-        console.log('📊 Sending visit data:', { path: location.pathname, sessionId, propertyId, engagementTime });
+        console.log('📊 Sending visit data:', { path: location.pathname, sessionId, trackingId, propertyId, engagementTime });
 
         await fetch(`${import.meta.env.VITE_ADMIN_API_URL}/api/analytics/track`, {
           method: 'POST',
@@ -28,6 +28,7 @@ export const usePageTracking = () => {
             path: location.pathname,
             referrer: document.referrer,
             sessionId,
+            trackingId,
             propertyId,
             engagementTime,
           }),
@@ -35,6 +36,7 @@ export const usePageTracking = () => {
 
         socket.emit('user_connected', {
           sessionId,
+          trackingId,
           propertyId,
           path: location.pathname,
         });
