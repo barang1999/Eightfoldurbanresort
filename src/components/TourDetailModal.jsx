@@ -178,6 +178,9 @@ export default function TourDetailModal({ tour, onClose }) {
                       const transportData = tour.transportation?.[key];
                       if (!transportData) return null;
 
+                      // 🧪 Debug price logging
+                      console.log("🧪 Debug price for", key, "→ 1–2 Pax:", transportData?.price1to2, "3–4 Pax:", transportData?.price3to4);
+
                       let capacity = transportData.capacity;
                       if (!capacity) {
                         if (key === "car") capacity = "1–4 Pax";
@@ -217,13 +220,22 @@ export default function TourDetailModal({ tour, onClose }) {
                               )}
                             </span>
                             <span>
-                              <span className="font-medium">{label}</span>
-                              {key === "tukTuk" ? (
-                                <> (1–2 Pax): ${transportData.price1to2} (3–4 Pax): ${transportData.price3to4}</>
-                              ) : (
-                                <> ({capacity}): ${transportData.price}</>
-                              )}
-                              {(transportData.extraSunrise || transportData.extraBackTown) && (
+                            <span className="font-medium">{label}</span>
+                            {key === "tukTuk" ? (
+                              <div className="space-y-1">
+                                {typeof transportData.price1to2 === 'number' && transportData.price1to2 > 0 && (
+                                  <div>(1–2 Pax): <strong>${transportData.price1to2}</strong></div>
+                                )}
+                                {typeof transportData.price3to4 === 'number' && transportData.price3to4 > 0 && (
+                                  <div>(3–4 Pax): <strong>${transportData.price3to4}</strong></div>
+                                )}
+                              </div>
+                            ) : (
+                              typeof transportData.price === 'number' && transportData.price > 0 && (
+                                <div>({capacity}): <strong>${transportData.price}</strong></div>
+                              )
+                            )}
+                              {(transportData.extraSunrise > 0 || transportData.extraBackTown > 0) && (
                                 <button
                                   className="ml-2 text-xs text-blue-500"
                                   onClick={() => setExpandedType(expandedType === key ? null : key)}
