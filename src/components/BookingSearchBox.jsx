@@ -93,11 +93,17 @@ export default function BookingSearchBox({
                         const selection = item.selection;
                         setSelectedDates(selection);
                         if (selection.startDate && selection.endDate) {
-                          const checkIn = selection.startDate.toLocaleDateString('sv-SE');
-                          const checkOut = selection.endDate.toLocaleDateString('sv-SE');
+                          const toUTCyyyyMMdd = (date) => {
+                            const y = date.getUTCFullYear();
+                            const m = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+                            const d = date.getUTCDate().toString().padStart(2, '0');
+                            return `${y}-${m}-${d}`;
+                          };
+                          const checkIn = toUTCyyyyMMdd(selection.startDate);
+                          const checkOut = toUTCyyyyMMdd(selection.endDate);
                           localStorage.setItem("debug_checkIn", checkIn);
                           localStorage.setItem("debug_checkOut", checkOut);
-                          console.log("📥 Stored in localStorage:");
+                          console.log("📥 Stored in localStorage (UTC):");
                           console.log("debug_checkIn:", checkIn);
                           console.log("debug_checkOut:", checkOut);
                         }
@@ -248,13 +254,21 @@ export default function BookingSearchBox({
                 console.log("📅 Check-in (raw):", selectedDates.startDate);
                 console.log("📅 Check-out (raw):", selectedDates.endDate);
 
-                const checkIn = selectedDates.startDate.toLocaleDateString('sv-SE');
-                const checkOut = selectedDates.endDate.toLocaleDateString('sv-SE'); // gives yyyy-mm-dd in local time
+                const toUTCyyyyMMdd = (date) => {
+                  const y = date.getUTCFullYear();
+                  const m = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+                  const d = date.getUTCDate().toString().padStart(2, '0');
+                  return `${y}-${m}-${d}`;
+                };
+
+                const checkIn = toUTCyyyyMMdd(selectedDates.startDate);
+                const checkOut = toUTCyyyyMMdd(selectedDates.endDate);
+                
                 localStorage.setItem("debug_checkIn", checkIn);
                 localStorage.setItem("debug_checkOut", checkOut);
                 const adults = rooms.reduce((sum, r) => sum + r.adults, 0);
                 const children = rooms.reduce((sum, r) => sum + r.children, 0);
-                console.log("📅 Final URL Params:", {
+                console.log("📅 Final URL Params (UTC):", {
                   checkIn,
                   checkOut,
                   adults,
