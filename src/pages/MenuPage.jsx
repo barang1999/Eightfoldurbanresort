@@ -684,6 +684,7 @@ export default function MenuPage() {
                     src={src}
                     alt={`${category} menu page ${pageIndex + 1}`}
                     className="absolute inset-0 h-full w-full select-none object-contain"
+                    style={{ scale: 1.06 }}
                     loading="eager"
                     draggable={false}
                     onLoad={() => setIsImageLoaded(true)}
@@ -703,7 +704,11 @@ export default function MenuPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4">
+          
+        </div>
+
+        <div className="mx-auto mt-4 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+          <div className="flex items-center justify-center gap-2 py-3">
             {pages.map((_, i) => (
               <button
                 key={i}
@@ -720,7 +725,6 @@ export default function MenuPage() {
             ))}
           </div>
         </div>
-
         <div className="mx-auto mt-4 md:mt-6 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl text-center text-xs text-neutral-500">
           Tip: swipe left/right (or use ← → keys)
         </div>
