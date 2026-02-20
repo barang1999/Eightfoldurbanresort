@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { UtensilsCrossed } from "lucide-react";
 
 const MENU = {
   Asian: ["/Menu/Asian1.webp", "/Menu/Asian2.webp"],
@@ -12,7 +13,8 @@ const CATEGORIES = ["Asian", "Western", "Dessert"];
 export default function MenuPage() {
   const [category, setCategory] = useState("Asian");
   const [pageIndex, setPageIndex] = useState(0);
-  const [direction, setDirection] = useState(1); // 1 = next (slide left), -1 = prev (slide right)
+  const [direction, setDirection] = useState(1);
+  const [isIntroVisible, setIsIntroVisible] = useState(true);
 
   const pointerStartXRef = useRef(null);
   const pointerIdRef = useRef(null);
@@ -105,6 +107,14 @@ export default function MenuPage() {
     setPageIndex(0);
   }, [category]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsIntroVisible(false);
+    }, 900); // duration of welcome screen
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const prev = () => {
     // If we're at the first page, go to previous category (landing on its last page).
     if (pageIndex <= 0) {
@@ -158,12 +168,34 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="relative min-h-screen bg-neutral-50 overflow-hidden">
+      <AnimatePresence>
+        {isIntroVisible && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-white"
+          >
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="text-2xl font-medium tracking-tight text-[#A58E63]"
+            >
+              Welcome to Sankya
+            </motion.h1>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* Top bar */}
       <div className="sticky top-0 z-20 border-b border-black/5 bg-white/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
-          <div className="text-sm font-semibold tracking-tight text-neutral-900">
-            Menu
+          <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-[#A58E63]">
+            <UtensilsCrossed size={18} strokeWidth={1.8} className="text-[#A58E63]" />
+            <span>Menu</span>
           </div>
 
           <div className="ml-auto flex items-center rounded-full bg-neutral-100 p-1">
