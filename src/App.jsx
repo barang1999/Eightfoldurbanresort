@@ -19,6 +19,7 @@ import ContactUsPage from './pages/ContactUs';
 import HotelPolicyPage from './pages/HotelPolicyPage';
 import HotelFacilityPage from './pages/HotelFacilityPage';
 import PoolPage from './pages/PoolPage';
+import MenuPage from './pages/MenuPage';
 
 import { usePageTracking } from './hooks/usePageTracking';
 
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="/policies" element={<Layout><HotelPolicyPage /></Layout>} />
           <Route path="/facilities" element={<Layout><HotelFacilityPage /></Layout>} />
           <Route path="/pool" element={<Layout><PoolPage /></Layout>} />
+          <Route path="/menu" element={<Layout><MenuPage /></Layout>} />
         </Routes>
       </TrackingWrapper>
       <Analytics />
