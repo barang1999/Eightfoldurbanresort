@@ -192,7 +192,7 @@ export default function MenuPage() {
       </AnimatePresence>
       {/* Top bar */}
       <div className="sticky top-0 z-20 border-b border-black/5 bg-white/80 backdrop-blur">
-        <div className="mx-auto flex max-w-5xl items-center gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 sm:px-6 py-3">
           <div className="flex items-center gap-2 text-sm font-semibold tracking-tight text-[#A58E63]">
             <UtensilsCrossed size={18} strokeWidth={1.8} className="text-[#A58E63]" />
             <span>Menu</span>
@@ -229,8 +229,8 @@ export default function MenuPage() {
       </div>
 
       {/* Viewer */}
-      <div className="mx-auto max-w-5xl px-4 py-6">
-        <div className="mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 sm:py-8">
+        <div className="mx-auto w-full max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_10px_30px_rgba(0,0,0,0.06)]">
           <div
             className="relative select-none"
             onPointerDown={onPointerDown}
@@ -240,7 +240,7 @@ export default function MenuPage() {
             aria-label="Menu page viewer (swipe left/right to change page)"
           >
             {src ? (
-              <div className="relative">
+              <div className="relative flex items-center justify-center bg-white">
                 <AnimatePresence initial={false} custom={direction} mode="wait">
                   <motion.img
                     key={`${category}-${pageIndex}`}
@@ -265,7 +265,7 @@ export default function MenuPage() {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-2 px-4 py-3">
+          <div className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4">
             {pages.map((_, i) => (
               <button
                 key={i}
@@ -283,7 +283,7 @@ export default function MenuPage() {
           </div>
         </div>
 
-        <div className="mx-auto mt-4 max-w-md text-center text-xs text-neutral-500">
+        <div className="mx-auto mt-4 md:mt-6 max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl text-center text-xs text-neutral-500">
           Tip: swipe left/right (or use ← → keys)
         </div>
       </div>
