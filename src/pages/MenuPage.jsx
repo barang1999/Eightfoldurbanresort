@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { UtensilsCrossed, X } from "lucide-react";
 
 const MENU = {
@@ -47,6 +47,32 @@ export default function MenuPage() {
   const lbY = useMotionValue(0);
   const lbScale = useMotionValue(LB_BASE_SCALE);
   const lbScaleClamped = useTransform(lbScale, (v) => Math.min(3, Math.max(LB_BASE_SCALE, v)));
+
+  // Enable pan when zoomed and constrain drag based on viewport size + scale
+  const lbViewportRef = useRef(null);
+  const [lbIsZoomed, setLbIsZoomed] = useState(false);
+  const [lbDragBounds, setLbDragBounds] = useState({ left: 0, right: 0, top: 0, bottom: 0 });
+
+  const updateLbDragBounds = (scale) => {
+    const el = lbViewportRef.current;
+    if (!el) {
+      setLbDragBounds({ left: 0, right: 0, top: 0, bottom: 0 });
+      return;
+    }
+
+    // Approximate bounds for object-contain: allow panning within (scale-1)/2 of viewport size.
+    // This feels natural and prevents losing the image entirely off-screen.
+    const rect = el.getBoundingClientRect();
+    const extraX = Math.max(0, (rect.width * (scale - 1)) / 2);
+    const extraY = Math.max(0, (rect.height * (scale - 1)) / 2);
+
+    setLbDragBounds({
+      left: -extraX,
+      right: extraX,
+      top: -extraY,
+      bottom: extraY,
+    });
+  };
 
   const pinchRef = useRef({
     pointers: new Map(),
@@ -109,9 +135,32 @@ export default function MenuPage() {
 
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
+  // Reactively enable pan when zoomed (MotionValue changes do not re-render by themselves)
+  useMotionValueEvent(lbScale, "change", (v) => {
+    const zoomed = v > LB_SWIPE_MAX_SCALE + 0.001;
+    setLbIsZoomed(zoomed);
+    updateLbDragBounds(v);
+
+    // If user zooms almost fully out, gently re-center.
+    if (v <= LB_BASE_SCALE + 0.02) {
+      lbX.set(0);
+      lbY.set(0);
+    }
+  });
+
+  useEffect(() => {
+    const onResize = () => updateLbDragBounds(lbScale.get());
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const zoomTo = (nextScale) => {
     const s = clamp(nextScale, LB_BASE_SCALE, 3);
+    updateLbDragBounds(s);
+
     animate(lbScale, s, { duration: 0.18, ease: "easeOut" });
+
     if (Math.abs(s - LB_BASE_SCALE) < 0.001) {
       // snap back to center when fully zoomed out
       animate(lbX, 0, { duration: 0.18, ease: "easeOut" });
@@ -359,8 +408,15 @@ export default function MenuPage() {
     lbX.set(0);
     lbY.set(0);
     lbScale.set(LB_BASE_SCALE);
+    setLbIsZoomed(false);
+    setLbDragBounds({ left: 0, right: 0, top: 0, bottom: 0 });
+
     pinchRef.current.startDist = null;
     pinchRef.current.pointers.clear();
+
+    // Recompute bounds once layout is ready
+    requestAnimationFrame(() => updateLbDragBounds(LB_BASE_SCALE));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [src, isLightboxOpen]);
 
   const slideVariants = {
@@ -470,7 +526,10 @@ export default function MenuPage() {
                   e.stopPropagation();
                 }}
               >
-                <div className="relative mx-auto w-full max-w-4xl aspect-[3/4] max-h-[90vh] overflow-hidden rounded-2xl bg-transparent">
+                <div
+                  ref={lbViewportRef}
+                  className="relative mx-auto w-full max-w-4xl aspect-[3/4] max-h-[90vh] overflow-hidden rounded-2xl bg-transparent"
+                >
                   {/* Loading overlay (prevents alignment flicker) */}
                   <AnimatePresence>
                     {!isLightboxImageLoaded && (
@@ -501,7 +560,9 @@ export default function MenuPage() {
                       exit="exit"
                       transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
                       style={{ x: lbX, y: lbY, scale: lbScaleClamped, touchAction: "none" }}
-                      drag={lbScale.get() > LB_SWIPE_MAX_SCALE}
+                      drag={lbIsZoomed}
+                      dragConstraints={lbDragBounds}
+                      dragElastic={0.08}
                       dragMomentum={false}
                       onLoad={() => setIsLightboxImageLoaded(true)}
                       onWheel={handleLightboxWheel}
