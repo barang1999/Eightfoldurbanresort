@@ -32,6 +32,7 @@ export default function MenuPage() {
   const [direction, setDirection] = useState(1);
   const [isIntroVisible, setIsIntroVisible] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isLightboxImageLoaded, setIsLightboxImageLoaded] = useState(false);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const pointerMovedRef = useRef(false);
 
@@ -40,10 +41,12 @@ export default function MenuPage() {
   const preservePageOnCategoryChangeRef = useRef(false);
 
   // Lightbox pan/zoom
+  const LB_BASE_SCALE = 1.07; // subtle default zoom for lightbox
+  const LB_SWIPE_MAX_SCALE = 1.08; // allow swipe until this scale
   const lbX = useMotionValue(0);
   const lbY = useMotionValue(0);
-  const lbScale = useMotionValue(1);
-  const lbScaleClamped = useTransform(lbScale, (v) => Math.min(3, Math.max(1, v)));
+  const lbScale = useMotionValue(LB_BASE_SCALE);
+  const lbScaleClamped = useTransform(lbScale, (v) => Math.min(3, Math.max(LB_BASE_SCALE, v)));
 
   const pinchRef = useRef({
     pointers: new Map(),
@@ -99,10 +102,6 @@ export default function MenuPage() {
     };
   }, [isLightboxOpen]);
   const openLightbox = () => {
-    console.debug("[Lightbox] openLightbox click", {
-      src,
-      pointerMoved: pointerMovedRef.current,
-    });
     if (!src) return;
     if (pointerMovedRef.current) return; // don’t open after swipe
     setIsLightboxOpen(true);
@@ -111,9 +110,9 @@ export default function MenuPage() {
   const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
   const zoomTo = (nextScale) => {
-    const s = clamp(nextScale, 1, 3);
+    const s = clamp(nextScale, LB_BASE_SCALE, 3);
     animate(lbScale, s, { duration: 0.18, ease: "easeOut" });
-    if (s === 1) {
+    if (Math.abs(s - LB_BASE_SCALE) < 0.001) {
       // snap back to center when fully zoomed out
       animate(lbX, 0, { duration: 0.18, ease: "easeOut" });
       animate(lbY, 0, { duration: 0.18, ease: "easeOut" });
@@ -131,7 +130,7 @@ export default function MenuPage() {
 
   const handleLightboxDoubleClick = () => {
     const current = lbScale.get();
-    zoomTo(current > 1.01 ? 1 : 2);
+    zoomTo(current > LB_BASE_SCALE + 0.01 ? LB_BASE_SCALE : 2);
   };
 
   const getDist = (a, b) => {
@@ -168,7 +167,7 @@ export default function MenuPage() {
       const dist = getDist(pts[0], pts[1]);
       const ratio = dist / pinchRef.current.startDist;
       const next = pinchRef.current.startScale * ratio;
-      lbScale.set(clamp(next, 1, 3));
+      lbScale.set(clamp(next, LB_BASE_SCALE, 3));
     }
   };
 
@@ -178,25 +177,17 @@ export default function MenuPage() {
       pinchRef.current.startDist = null;
     }
 
-    // If user pinched down close to 1, snap to 1 and re-center
+    // If user pinched down close to LB_BASE_SCALE, snap to LB_BASE_SCALE and re-center
     const s = lbScale.get();
-    if (s < 1.02) zoomTo(1);
+    if (s < LB_BASE_SCALE + 0.02) zoomTo(LB_BASE_SCALE);
   };
 
   const onLightboxSwipePointerDown = (e) => {
     // Only swipe-navigate when not zoomed (so it doesn't fight pan/zoom)
-    if (lbScale.get() > 1.01) return;
+    if (lbScale.get() > LB_SWIPE_MAX_SCALE) return;
 
     // Only primary button for mouse; touch/stylus are fine
     if (e.pointerType === "mouse" && e.button !== 0) return;
-
-    console.debug("[LB Swipe] down", {
-      pointerType: e.pointerType,
-      x: e.clientX,
-      scale: lbScale.get(),
-      pageIndex,
-      category,
-    });
 
     lbDidSwipeRef.current = false;
     lbSwipeStartXRef.current = e.clientX;
@@ -213,15 +204,6 @@ export default function MenuPage() {
   const onLightboxSwipePointerUp = (e) => {
     if (lbSwipePointerIdRef.current !== e.pointerId) return;
 
-    console.debug("[LB Swipe] up", {
-      pointerType: e.pointerType,
-      x: e.clientX,
-      startX: lbSwipeStartXRef.current,
-      scale: lbScale.get(),
-      pageIndex,
-      category,
-    });
-
     const startX = lbSwipeStartXRef.current;
     lbSwipeStartXRef.current = null;
     lbSwipePointerIdRef.current = null;
@@ -229,10 +211,9 @@ export default function MenuPage() {
     if (startX == null) return;
 
     // If zoomed, do nothing (pan/zoom mode)
-    if (lbScale.get() > 1.01) return;
+    if (lbScale.get() > LB_SWIPE_MAX_SCALE) return;
 
     const dx = e.clientX - startX;
-    console.debug("[LB Swipe] dx", { dx, threshold: SWIPE_THRESHOLD_PX });
     if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
 
     lbDidSwipeRef.current = true;
@@ -247,17 +228,7 @@ export default function MenuPage() {
       prev();
     }
   };
-  // Debug: pointer move handler for lightbox swipe
-  const onLightboxSwipePointerMove = (e) => {
-    if (lbSwipePointerIdRef.current !== e.pointerId) return;
-    // Log occasionally (not every pixel). Only when moved > 15px from start.
-    const startX = lbSwipeStartXRef.current;
-    if (startX == null) return;
-    const dx = e.clientX - startX;
-    if (Math.abs(dx) > 15) {
-      console.debug("[LB Swipe] move", { dx });
-    }
-  };
+  // onLightboxSwipePointerMove was used for debug logging only; remove function
 
   const onLightboxSwipePointerCancel = (e) => {
     if (lbSwipePointerIdRef.current !== e.pointerId) return;
@@ -275,7 +246,6 @@ export default function MenuPage() {
     if (startX == null) return;
 
     const dx = e.clientX - startX;
-    console.debug("[Swipe] detected", { dx });
     if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
 
     // Swipe left -> next page, swipe right -> previous page
@@ -383,10 +353,12 @@ export default function MenuPage() {
   }, [src]);
 
   useEffect(() => {
-    // Reset pan/zoom for new image
+    // Reset pan/zoom + loading for new image
+    setIsLightboxImageLoaded(false);
+
     lbX.set(0);
     lbY.set(0);
-    lbScale.set(1);
+    lbScale.set(LB_BASE_SCALE);
     pinchRef.current.startDist = null;
     pinchRef.current.pointers.clear();
   }, [src, isLightboxOpen]);
@@ -459,13 +431,9 @@ export default function MenuPage() {
             transition={{ duration: 0.18 }}
             className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
             onWheel={(e) => {
-              console.debug("[Lightbox] wheel");
               e.preventDefault();
             }}
             onClick={(e) => {
-              console.debug("[Lightbox] backdrop click", {
-                targetIsCurrent: e.target === e.currentTarget,
-              });
               e.stopPropagation();
 
               // If a swipe just occurred, ignore this click (prevents accidental close)
@@ -479,7 +447,6 @@ export default function MenuPage() {
           >
             <motion.button
               onClick={(e) => {
-                console.debug("[Lightbox] close button click");
                 e.stopPropagation();
                 setIsLightboxOpen(false);
               }}
@@ -500,47 +467,64 @@ export default function MenuPage() {
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="relative w-full max-w-5xl"
                 onClick={(e) => {
-                  console.debug("[Lightbox] inner container click (stop)");
                   e.stopPropagation();
                 }}
               >
-                <AnimatePresence initial={false} custom={direction} mode="wait">
-                  <motion.img
-                    key={`lb-${category}-${pageIndex}`}
-                    src={src}
-                    alt={`${category} menu page ${pageIndex + 1} (full screen)`}
-                    className="max-h-[90vh] w-full rounded-2xl bg-white object-contain cursor-grab active:cursor-grabbing"
-                    draggable={false}
-                    custom={direction}
-                    variants={lightboxSlideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
-                    style={{ x: lbX, y: lbY, scale: lbScaleClamped, touchAction: "none" }}
-                    drag={lbScale.get() > 1.01}
-                    dragMomentum={false}
-                    onWheel={handleLightboxWheel}
-                    onDoubleClick={handleLightboxDoubleClick}
-                    onPointerDown={(e) => {
-                      if (lbScale.get() <= 1.01) e.preventDefault();
-                      onLightboxSwipePointerDown(e);
-                      onLightboxPointerDown(e);
-                    }}
-                    onPointerMove={(e) => {
-                      onLightboxSwipePointerMove(e);
-                      onLightboxPointerMove(e);
-                    }}
-                    onPointerUp={(e) => {
-                      onLightboxSwipePointerUp(e);
-                      onLightboxPointerUp(e);
-                    }}
-                    onPointerCancel={(e) => {
-                      onLightboxSwipePointerCancel(e);
-                      onLightboxPointerUp(e);
-                    }}
-                  />
-                </AnimatePresence>
+                <div className="relative mx-auto w-full max-w-4xl aspect-[3/4] max-h-[90vh] overflow-hidden rounded-2xl bg-transparent">
+                  {/* Loading overlay (prevents alignment flicker) */}
+                  <AnimatePresence>
+                    {!isLightboxImageLoaded && (
+                      <motion.div
+                        key="lb-placeholder"
+                        initial={{ opacity: 1 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="absolute inset-0 z-10 flex items-center justify-center bg-transparent"
+                      >
+                        <div className="h-6 w-6 rounded-full border-2 border-[#A58E63]/30 border-t-[#A58E63] animate-spin" />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  <AnimatePresence initial={false} custom={direction} mode="wait">
+                    <motion.img
+                      key={`lb-${category}-${pageIndex}`}
+                      src={src}
+                      alt={`${category} menu page ${pageIndex + 1} (full screen)`}
+                      className="absolute inset-0 h-full w-full object-contain cursor-grab active:cursor-grabbing"
+                      draggable={false}
+                      custom={direction}
+                      variants={lightboxSlideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
+                      style={{ x: lbX, y: lbY, scale: lbScaleClamped, touchAction: "none" }}
+                      drag={lbScale.get() > LB_SWIPE_MAX_SCALE}
+                      dragMomentum={false}
+                      onLoad={() => setIsLightboxImageLoaded(true)}
+                      onWheel={handleLightboxWheel}
+                      onDoubleClick={handleLightboxDoubleClick}
+                      onPointerDown={(e) => {
+                        if (lbScale.get() <= LB_SWIPE_MAX_SCALE) e.preventDefault();
+                        onLightboxSwipePointerDown(e);
+                        onLightboxPointerDown(e);
+                      }}
+                      onPointerMove={(e) => {
+                        onLightboxPointerMove(e);
+                      }}
+                      onPointerUp={(e) => {
+                        onLightboxSwipePointerUp(e);
+                        onLightboxPointerUp(e);
+                      }}
+                      onPointerCancel={(e) => {
+                        onLightboxSwipePointerCancel(e);
+                        onLightboxPointerUp(e);
+                      }}
+                    />
+                  </AnimatePresence>
+                </div>
                 {upsellText ? (
                   <AnimatePresence initial={false} mode="wait">
                     <motion.div
