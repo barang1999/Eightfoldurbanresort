@@ -8,7 +8,23 @@ const MENU = {
   Dessert: ["/Menu/Dessert1.webp", "/Menu/Dessert2.webp"],
 };
 
+
 const CATEGORIES = ["Asian", "Western", "Dessert"];
+
+const MENU_UPSELL = {
+  Asian: [
+    "Signature Asian flavors — crafted fresh with aromatic herbs and spices.",
+    "A refined taste of Asia — vibrant, comforting, and beautifully balanced.",
+  ],
+  Western: [
+    "Contemporary Western favorites — thoughtfully prepared with premium ingredients.",
+    "Chef’s Western selections — elevate your meal with the perfect pairing.",
+  ],
+  Dessert: [
+    "A gentle indulgence — chilled refreshments and handcrafted sweet moments.",
+    "End on a sweet note — café-style desserts served with effortless elegance.",
+  ],
+};
 
 export default function MenuPage() {
   const [category, setCategory] = useState("Asian");
@@ -34,6 +50,11 @@ export default function MenuPage() {
     startDist: null,
     startScale: 1,
   });
+
+  // Lightbox swipe (page navigation)
+  const lbSwipeStartXRef = useRef(null);
+  const lbSwipePointerIdRef = useRef(null);
+  const lbDidSwipeRef = useRef(false);
 
   const SWIPE_THRESHOLD_PX = 60;
 
@@ -121,14 +142,17 @@ export default function MenuPage() {
 
   const onLightboxPointerDown = (e) => {
     if (e.pointerType === "mouse") return; // pinch is for touch/stylus
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch {
-      // ignore
-    }
 
     pinchRef.current.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    // Only capture pointer when we have 2 touches (pinch)
     if (pinchRef.current.pointers.size === 2) {
+      try {
+        e.currentTarget.setPointerCapture(e.pointerId);
+      } catch {
+        // ignore
+      }
+
       const pts = Array.from(pinchRef.current.pointers.values());
       pinchRef.current.startDist = getDist(pts[0], pts[1]);
       pinchRef.current.startScale = lbScale.get();
@@ -157,6 +181,88 @@ export default function MenuPage() {
     // If user pinched down close to 1, snap to 1 and re-center
     const s = lbScale.get();
     if (s < 1.02) zoomTo(1);
+  };
+
+  const onLightboxSwipePointerDown = (e) => {
+    // Only swipe-navigate when not zoomed (so it doesn't fight pan/zoom)
+    if (lbScale.get() > 1.01) return;
+
+    // Only primary button for mouse; touch/stylus are fine
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+
+    console.debug("[LB Swipe] down", {
+      pointerType: e.pointerType,
+      x: e.clientX,
+      scale: lbScale.get(),
+      pageIndex,
+      category,
+    });
+
+    lbDidSwipeRef.current = false;
+    lbSwipeStartXRef.current = e.clientX;
+    lbSwipePointerIdRef.current = e.pointerId;
+    if (pinchRef.current.pointers.size >= 2) return;
+
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+  };
+
+  const onLightboxSwipePointerUp = (e) => {
+    if (lbSwipePointerIdRef.current !== e.pointerId) return;
+
+    console.debug("[LB Swipe] up", {
+      pointerType: e.pointerType,
+      x: e.clientX,
+      startX: lbSwipeStartXRef.current,
+      scale: lbScale.get(),
+      pageIndex,
+      category,
+    });
+
+    const startX = lbSwipeStartXRef.current;
+    lbSwipeStartXRef.current = null;
+    lbSwipePointerIdRef.current = null;
+
+    if (startX == null) return;
+
+    // If zoomed, do nothing (pan/zoom mode)
+    if (lbScale.get() > 1.01) return;
+
+    const dx = e.clientX - startX;
+    console.debug("[LB Swipe] dx", { dx, threshold: SWIPE_THRESHOLD_PX });
+    if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
+
+    lbDidSwipeRef.current = true;
+
+    if (dx < 0) {
+      // swipe left => next
+      setDirection(1);
+      next();
+    } else {
+      // swipe right => prev
+      setDirection(-1);
+      prev();
+    }
+  };
+  // Debug: pointer move handler for lightbox swipe
+  const onLightboxSwipePointerMove = (e) => {
+    if (lbSwipePointerIdRef.current !== e.pointerId) return;
+    // Log occasionally (not every pixel). Only when moved > 15px from start.
+    const startX = lbSwipeStartXRef.current;
+    if (startX == null) return;
+    const dx = e.clientX - startX;
+    if (Math.abs(dx) > 15) {
+      console.debug("[LB Swipe] move", { dx });
+    }
+  };
+
+  const onLightboxSwipePointerCancel = (e) => {
+    if (lbSwipePointerIdRef.current !== e.pointerId) return;
+    lbSwipeStartXRef.current = null;
+    lbSwipePointerIdRef.current = null;
   };
 
   const onPointerUp = (e) => {
@@ -271,6 +377,7 @@ export default function MenuPage() {
   }, [category, pageIndex, total]);
 
   const src = pages[pageIndex] || "";
+  const upsellText = (MENU_UPSELL[category] ?? [])[pageIndex] || "";
   useEffect(() => {
     setIsImageLoaded(false);
   }, [src]);
@@ -299,6 +406,22 @@ export default function MenuPage() {
       x: dir > 0 ? -40 : 40,
       opacity: 0,
       filter: "blur(2px)",
+    }),
+  };
+
+  // Lightbox slide variants (stronger than card view)
+  const lightboxSlideVariants = {
+    enter: (dir) => ({
+      x: dir > 0 ? 80 : -80,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (dir) => ({
+      x: dir > 0 ? -80 : 80,
+      opacity: 0,
     }),
   };
 
@@ -344,6 +467,13 @@ export default function MenuPage() {
                 targetIsCurrent: e.target === e.currentTarget,
               });
               e.stopPropagation();
+
+              // If a swipe just occurred, ignore this click (prevents accidental close)
+              if (lbDidSwipeRef.current) {
+                lbDidSwipeRef.current = false;
+                return;
+              }
+
               if (e.target === e.currentTarget) setIsLightboxOpen(false);
             }}
           >
@@ -374,24 +504,59 @@ export default function MenuPage() {
                   e.stopPropagation();
                 }}
               >
-                <motion.img
-                  src={src}
-                  alt={`${category} menu page ${pageIndex + 1} (full screen)`}
-                  className="max-h-[90vh] w-full rounded-2xl bg-white object-contain cursor-grab active:cursor-grabbing"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.2 }}
-                  draggable={false}
-                  style={{ x: lbX, y: lbY, scale: lbScaleClamped }}
-                  drag={lbScale.get() > 1.01}
-                  dragMomentum={false}
-                  onWheel={handleLightboxWheel}
-                  onDoubleClick={handleLightboxDoubleClick}
-                  onPointerDown={onLightboxPointerDown}
-                  onPointerMove={onLightboxPointerMove}
-                  onPointerUp={onLightboxPointerUp}
-                  onPointerCancel={onLightboxPointerUp}
-                />
+                <AnimatePresence initial={false} custom={direction} mode="wait">
+                  <motion.img
+                    key={`lb-${category}-${pageIndex}`}
+                    src={src}
+                    alt={`${category} menu page ${pageIndex + 1} (full screen)`}
+                    className="max-h-[90vh] w-full rounded-2xl bg-white object-contain cursor-grab active:cursor-grabbing"
+                    draggable={false}
+                    custom={direction}
+                    variants={lightboxSlideVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
+                    style={{ x: lbX, y: lbY, scale: lbScaleClamped, touchAction: "none" }}
+                    drag={lbScale.get() > 1.01}
+                    dragMomentum={false}
+                    onWheel={handleLightboxWheel}
+                    onDoubleClick={handleLightboxDoubleClick}
+                    onPointerDown={(e) => {
+                      if (lbScale.get() <= 1.01) e.preventDefault();
+                      onLightboxSwipePointerDown(e);
+                      onLightboxPointerDown(e);
+                    }}
+                    onPointerMove={(e) => {
+                      onLightboxSwipePointerMove(e);
+                      onLightboxPointerMove(e);
+                    }}
+                    onPointerUp={(e) => {
+                      onLightboxSwipePointerUp(e);
+                      onLightboxPointerUp(e);
+                    }}
+                    onPointerCancel={(e) => {
+                      onLightboxSwipePointerCancel(e);
+                      onLightboxPointerUp(e);
+                    }}
+                  />
+                </AnimatePresence>
+                {upsellText ? (
+                  <AnimatePresence initial={false} mode="wait">
+                    <motion.div
+                      key={`lb-caption-${category}-${pageIndex}`}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 6 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      className="mt-3 flex justify-center"
+                    >
+                      <div className="max-w-3xl rounded-full bg-white/15 px-4 py-2 text-center text-xs sm:text-sm text-[#A58E63] backdrop-blur-md border border-white/20">
+                        {upsellText}
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
+                ) : null}
               </motion.div>
             </div>
           </motion.div>
