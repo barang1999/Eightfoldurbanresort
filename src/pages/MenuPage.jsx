@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { UtensilsCrossed } from "lucide-react";
+import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "framer-motion";
+import { UtensilsCrossed, X } from "lucide-react";
 
 const MENU = {
   Asian: ["/Menu/Asian1.webp", "/Menu/Asian2.webp"],
@@ -16,16 +16,32 @@ export default function MenuPage() {
   const [direction, setDirection] = useState(1);
   const [isIntroVisible, setIsIntroVisible] = useState(true);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const pointerMovedRef = useRef(false);
 
   const pointerStartXRef = useRef(null);
   const pointerIdRef = useRef(null);
   const preservePageOnCategoryChangeRef = useRef(false);
+
+  // Lightbox pan/zoom
+  const lbX = useMotionValue(0);
+  const lbY = useMotionValue(0);
+  const lbScale = useMotionValue(1);
+  const lbScaleClamped = useTransform(lbScale, (v) => Math.min(3, Math.max(1, v)));
+
+  const pinchRef = useRef({
+    pointers: new Map(),
+    startDist: null,
+    startScale: 1,
+  });
 
   const SWIPE_THRESHOLD_PX = 60;
 
   const onPointerDown = (e) => {
     // Only primary button for mouse; touch/stylus are fine
     if (e.pointerType === "mouse" && e.button !== 0) return;
+
+    pointerMovedRef.current = false;
 
     pointerStartXRef.current = e.clientX;
     pointerIdRef.current = e.pointerId;
@@ -38,6 +54,111 @@ export default function MenuPage() {
     }
   };
 
+  const onPointerMove = (e) => {
+    const startX = pointerStartXRef.current;
+    if (startX == null) return;
+    if (Math.abs(e.clientX - startX) > 10) {
+      pointerMovedRef.current = true;
+    }
+  };
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") setIsLightboxOpen(false);
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isLightboxOpen]);
+  const openLightbox = () => {
+    console.debug("[Lightbox] openLightbox click", {
+      src,
+      pointerMoved: pointerMovedRef.current,
+    });
+    if (!src) return;
+    if (pointerMovedRef.current) return; // don’t open after swipe
+    setIsLightboxOpen(true);
+  };
+
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
+  const zoomTo = (nextScale) => {
+    const s = clamp(nextScale, 1, 3);
+    animate(lbScale, s, { duration: 0.18, ease: "easeOut" });
+    if (s === 1) {
+      // snap back to center when fully zoomed out
+      animate(lbX, 0, { duration: 0.18, ease: "easeOut" });
+      animate(lbY, 0, { duration: 0.18, ease: "easeOut" });
+    }
+  };
+
+  const handleLightboxWheel = (e) => {
+    // Trackpad / mouse wheel zoom
+    e.preventDefault();
+    const delta = -e.deltaY;
+    const factor = delta > 0 ? 1.08 : 0.92;
+    const current = lbScale.get();
+    zoomTo(current * factor);
+  };
+
+  const handleLightboxDoubleClick = () => {
+    const current = lbScale.get();
+    zoomTo(current > 1.01 ? 1 : 2);
+  };
+
+  const getDist = (a, b) => {
+    const dx = a.x - b.x;
+    const dy = a.y - b.y;
+    return Math.hypot(dx, dy);
+  };
+
+  const onLightboxPointerDown = (e) => {
+    if (e.pointerType === "mouse") return; // pinch is for touch/stylus
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // ignore
+    }
+
+    pinchRef.current.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinchRef.current.pointers.size === 2) {
+      const pts = Array.from(pinchRef.current.pointers.values());
+      pinchRef.current.startDist = getDist(pts[0], pts[1]);
+      pinchRef.current.startScale = lbScale.get();
+    }
+  };
+
+  const onLightboxPointerMove = (e) => {
+    if (!pinchRef.current.pointers.has(e.pointerId)) return;
+    pinchRef.current.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+    if (pinchRef.current.pointers.size === 2 && pinchRef.current.startDist) {
+      const pts = Array.from(pinchRef.current.pointers.values());
+      const dist = getDist(pts[0], pts[1]);
+      const ratio = dist / pinchRef.current.startDist;
+      const next = pinchRef.current.startScale * ratio;
+      lbScale.set(clamp(next, 1, 3));
+    }
+  };
+
+  const onLightboxPointerUp = (e) => {
+    pinchRef.current.pointers.delete(e.pointerId);
+    if (pinchRef.current.pointers.size < 2) {
+      pinchRef.current.startDist = null;
+    }
+
+    // If user pinched down close to 1, snap to 1 and re-center
+    const s = lbScale.get();
+    if (s < 1.02) zoomTo(1);
+  };
+
   const onPointerUp = (e) => {
     if (pointerIdRef.current !== e.pointerId) return;
 
@@ -48,6 +169,7 @@ export default function MenuPage() {
     if (startX == null) return;
 
     const dx = e.clientX - startX;
+    console.debug("[Swipe] detected", { dx });
     if (Math.abs(dx) < SWIPE_THRESHOLD_PX) return;
 
     // Swipe left -> next page, swipe right -> previous page
@@ -153,6 +275,15 @@ export default function MenuPage() {
     setIsImageLoaded(false);
   }, [src]);
 
+  useEffect(() => {
+    // Reset pan/zoom for new image
+    lbX.set(0);
+    lbY.set(0);
+    lbScale.set(1);
+    pinchRef.current.startDist = null;
+    pinchRef.current.pointers.clear();
+  }, [src, isLightboxOpen]);
+
   const slideVariants = {
     enter: (dir) => ({
       x: dir > 0 ? 40 : -40,
@@ -191,6 +322,78 @@ export default function MenuPage() {
             >
               Welcome to Sankya
             </motion.h1>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      {/* Lightbox overlay */}
+      <AnimatePresence>
+        {isLightboxOpen && src && (
+          <motion.div
+            key="lightbox"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18 }}
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+            onWheel={(e) => {
+              console.debug("[Lightbox] wheel");
+              e.preventDefault();
+            }}
+            onClick={(e) => {
+              console.debug("[Lightbox] backdrop click", {
+                targetIsCurrent: e.target === e.currentTarget,
+              });
+              e.stopPropagation();
+              if (e.target === e.currentTarget) setIsLightboxOpen(false);
+            }}
+          >
+            <motion.button
+              onClick={(e) => {
+                console.debug("[Lightbox] close button click");
+                e.stopPropagation();
+                setIsLightboxOpen(false);
+              }}
+              className="fixed top-3 right-3 z-50 rounded-full bg-white/20 p-2 backdrop-blur-md border border-white/30 shadow-sm transition hover:bg-white/30 focus:outline-none"
+              aria-label="Close"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: "tween", duration: 0.12, ease: "easeOut" }}
+            >
+              <X size={18} className="text-[#A58E63]" />
+            </motion.button>
+
+            <div className="flex h-full w-full items-center justify-center p-4 sm:p-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98, y: 6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98, y: 6 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="relative w-full max-w-5xl"
+                onClick={(e) => {
+                  console.debug("[Lightbox] inner container click (stop)");
+                  e.stopPropagation();
+                }}
+              >
+                <motion.img
+                  src={src}
+                  alt={`${category} menu page ${pageIndex + 1} (full screen)`}
+                  className="max-h-[90vh] w-full rounded-2xl bg-white object-contain cursor-grab active:cursor-grabbing"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.2 }}
+                  draggable={false}
+                  style={{ x: lbX, y: lbY, scale: lbScaleClamped }}
+                  drag={lbScale.get() > 1.01}
+                  dragMomentum={false}
+                  onWheel={handleLightboxWheel}
+                  onDoubleClick={handleLightboxDoubleClick}
+                  onPointerDown={onLightboxPointerDown}
+                  onPointerMove={onLightboxPointerMove}
+                  onPointerUp={onLightboxPointerUp}
+                  onPointerCancel={onLightboxPointerUp}
+                />
+              </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -238,10 +441,14 @@ export default function MenuPage() {
           <div
             className="relative select-none"
             onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerCancel}
+            onClick={openLightbox}
             style={{ touchAction: "pan-y" }}
             aria-label="Menu page viewer (swipe left/right to change page)"
+            role="button"
+            tabIndex={0}
           >
             <div className="relative w-full aspect-[3/4] bg-white">
               {/* Subtle placeholder to avoid layout jump */}
