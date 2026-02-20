@@ -15,6 +15,7 @@ export default function MenuPage() {
   const [pageIndex, setPageIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [isIntroVisible, setIsIntroVisible] = useState(true);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   const pointerStartXRef = useRef(null);
   const pointerIdRef = useRef(null);
@@ -148,6 +149,9 @@ export default function MenuPage() {
   }, [category, pageIndex, total]);
 
   const src = pages[pageIndex] || "";
+  useEffect(() => {
+    setIsImageLoaded(false);
+  }, [src]);
 
   const slideVariants = {
     enter: (dir) => ({
@@ -239,16 +243,33 @@ export default function MenuPage() {
             style={{ touchAction: "pan-y" }}
             aria-label="Menu page viewer (swipe left/right to change page)"
           >
-            {src ? (
-              <div className="relative flex items-center justify-center bg-white">
+            <div className="relative w-full aspect-[3/4] bg-white">
+              {/* Subtle placeholder to avoid layout jump */}
+              <AnimatePresence>
+                {!isImageLoaded && (
+                  <motion.div
+                    key="placeholder"
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="absolute inset-0 flex items-center justify-center bg-neutral-50"
+                  >
+                    <div className="h-5 w-5 rounded-full border-2 border-[#A58E63]/30 border-t-[#A58E63] animate-spin" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {src ? (
                 <AnimatePresence initial={false} custom={direction} mode="wait">
                   <motion.img
                     key={`${category}-${pageIndex}`}
                     src={src}
                     alt={`${category} menu page ${pageIndex + 1}`}
-                    className="block h-auto w-full select-none"
+                    className="absolute inset-0 h-full w-full select-none object-contain"
                     loading="eager"
                     draggable={false}
+                    onLoad={() => setIsImageLoaded(true)}
                     custom={direction}
                     variants={slideVariants}
                     initial="enter"
@@ -257,12 +278,12 @@ export default function MenuPage() {
                     transition={{ type: "tween", duration: 0.22, ease: "easeOut" }}
                   />
                 </AnimatePresence>
-              </div>
-            ) : (
-              <div className="flex h-[70vh] items-center justify-center text-sm text-neutral-500">
-                No menu image found.
-              </div>
-            )}
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-sm text-neutral-500">
+                  No menu image found.
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-4">
