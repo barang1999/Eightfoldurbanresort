@@ -42,12 +42,12 @@ export default function TourShowcase({ tours = [], title }) {
             {tour.imageUrls?.[0] && (
               <img
                 src={tour.imageUrls[0]}
-                alt={tour.category}
+                alt={tour.title}
                 className="w-full h-[240px] object-cover rounded transition-transform duration-300 hover:scale-105 cursor-pointer"
                 onClick={() => setSelectedTour(tour)}
               />
             )}
-            <h3 className="text-xl font-light uppercase">{tour.category}</h3>
+            <h3 className="text-xl font-light uppercase">{tour.title}</h3>
             {tour.tags && (
               <div className="flex flex-wrap items-center gap-x-1.5 gap-y-1 text-sm text-gray-500 font-medium tracking-wide">
                 {tour.tags
